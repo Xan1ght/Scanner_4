@@ -1,4 +1,5 @@
 package lexical.analyze;
 
-public interface tData {
+public class tData {
+    public int data;
 }
