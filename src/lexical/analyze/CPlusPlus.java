@@ -1,6 +1,6 @@
 package lexical.analyze;
 
-public class O {
+public class CPlusPlus {
 
     static void Init() {
         Text.Reset();
@@ -8,7 +8,6 @@ public class O {
             Error.Message(Text.Message);
         }
         Scanner.Init();
-        Gen.Init();
     }
 
     static void Done() {
@@ -16,7 +15,7 @@ public class O {
     }
 
     public static void main(String[] args) {
-        System.out.println("\nЉ®¬ЇЁ«пв®а п§лЄ  Ћ");
+        System.out.println("\n Компилятор С++");
         if (args.length == 0) {
             Location.Path = null;
         } else {
@@ -24,7 +23,6 @@ public class O {
         }
         Init();         //
         Pars.Compile(); //
-        OVM.Run();      //
         Done();         //
     }
 }
