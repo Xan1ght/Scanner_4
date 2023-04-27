@@ -276,6 +276,14 @@ private static void Comment() {
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexLess_Eq;
+                    } else if (Text.Ch == '<') {
+                        Text.NextCh();
+                        if (Text.Ch == '=') {
+                            Text.NextCh();
+                            Lex = lexShift_Left_Eq;
+                        } else {
+                            Lex = lexShift_Left;
+                        }
                     } else {
                         Lex = lexLess;
                     }
@@ -285,6 +293,14 @@ private static void Comment() {
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexGreater_Eq;
+                    } else if (Text.Ch == '>') {
+                        Text.NextCh();
+                        if (Text.Ch == '=') {
+                            Text.NextCh();
+                            Lex = lexShift_Right_Eq;
+                        } else {
+                            Lex = lexShift_Right;
+                        }
                     } else {
                         Lex = lexGreater;
                     }
@@ -353,6 +369,57 @@ private static void Comment() {
                         Lex = lexSlash_Eq;
                     } else {
                         Lex = lexSlash;
+                    }
+                    break;
+                case '%':
+                    Text.NextCh();
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexModulo_Eq;
+                    } else {
+                        Lex = lexModulo;
+                    }
+                    break;
+                case '&':
+                    Text.NextCh();
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexAmpersand_Eq;
+                    } else if (Text.Ch == '&') {
+                        Text.NextCh();
+                        Lex = lexLogical_And;
+                    } else {
+                        Lex = lexAmpersand;
+                    }
+                    break;
+                case '|':
+                    Text.NextCh();
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexPipe_Eq;
+                    } else if (Text.Ch == '|') {
+                        Text.NextCh();
+                        Lex = lexLogical_Or;
+                    } else {
+                        Lex = lexPipe;
+                    }
+                    break;
+                case '^':
+                    Text.NextCh();
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexCaret_Eq;
+                    } else {
+                        Lex = lexCaret;
+                    }
+                    break;
+                case '#':
+                    Text.NextCh();
+                    if (Text.Ch == '#') {
+                        Text.NextCh();
+                        Lex = lexHash_Hash;
+                    } else {
+                        Lex = lexHash;
                     }
                     break;
                 case Text.chEOT:
