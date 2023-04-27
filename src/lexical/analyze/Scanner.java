@@ -62,6 +62,9 @@ class Scanner {
         lexArrow_Star = 45,     /* ->* */           lexShift_Left_Eq = 88,  /* <<= */       lexShift_Right_Eq = 130,    /* >>= */
         lexPlus_Plus = 46,      /* ++ */            lexMinus_Minus = 89,    /* -- */        lexExclaim = 131,           /* ! */
         lexHash = 47,           /* # */             lexHash_Hash = 90,      /* ## */
+
+
+
         lexEOT = 150;           /* /0 */
 
 
@@ -108,11 +111,13 @@ class Scanner {
         }
     }
 
+
     static void InitChainHash() {
         for (int i = 0; i < N; i++) {
             H[i] = null;
         }
     }
+
 
     /* Плохая функция */
     static int ChainHash(String K) {
@@ -125,6 +130,7 @@ class Scanner {
 
         return Math.abs((int)(m % N));
     }
+
 
     static void Add2ChainHash(tChainHash[] T, String K, int D) {
         int h = ChainHash(K);
@@ -140,6 +146,7 @@ class Scanner {
         }
     }
 
+
     // Поиск
     static Item Search(tChainHash[] T, String K) {
         int h = ChainHash(K);
@@ -151,6 +158,7 @@ class Scanner {
 
         return p;
     }
+
 
     private static void Ident() {
         int i = 0;
@@ -167,6 +175,7 @@ class Scanner {
         Lex = TestKW(); //
     }
 
+
     private static void Number() {
         Lex = lexNum;
         Num = 0;
@@ -181,6 +190,7 @@ class Scanner {
             Text.NextCh();
         } while (Character.isDigit((char)Text.Ch));
     }
+
 
     private static void CommentStar() {
         Text.NextCh();
@@ -198,35 +208,13 @@ class Scanner {
         }
     }
 
+
     private static void Comment() {
         while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
             Text.NextCh();
         }
     }
-/*
-private static void Comment() {
-   int Level = 1;
-   Text.NextCh();
-   do
-      if( Text.Ch == '*' ) {
-         Text.NextCh();
-         if( Text.Ch == ')' )
-            { Level--; Text.NextCh(); }
-         }
-      else if( Text.Ch == '(' ) {
-         Text.NextCh();
-         if( Text.Ch == '*' )
-            { Level++; Text.NextCh(); }
-         }
-      else //if ( Text.Ch <> chEOT )
-         Text.NextCh();
-   while( Level != 0 && Text.Ch != Text.chEOT );
-   if( Level != 0 ) {
-      Location.LexPos = Location.Pos;
-      Error.Message("ЌҐ § Є®­зҐ­ Є®¬¬Ґ­в аЁ©");
-   }
-}
-*/
+
 
     static void NextLex() {
         while (Text.Ch == Text.chSPACE || Text.Ch == Text.chTAB || Text.Ch == Text.chEOL) {
@@ -256,7 +244,20 @@ private static void Comment() {
                     break;
                 case '.':
                     Text.NextCh();
-                    Lex = lexDot;
+                    if (Text.Ch == '*') {
+                        Text.NextCh();
+                        Lex = lexDot_Star;
+                    } else if (Text.Ch == '.') {
+                        if (Lex == lexDot) {
+                            Text.NextCh();
+                            Lex = lexEllipsis;
+                        } else {
+                            Lex = lexDot;
+                            NextLex();
+                        }
+                    } else {
+                        Lex = lexDot;
+                    }
                     break;
                 case ',':
                     Text.NextCh();
@@ -334,6 +335,9 @@ private static void Comment() {
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexPlus_Eq;
+                    } else if (Text.Ch == '+') {
+                        Text.NextCh();
+                        Lex = lexPlus_Plus;
                     } else {
                         Lex = lexPlus;
                     }
@@ -343,6 +347,17 @@ private static void Comment() {
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexMinus_Eq;
+                    } else if (Text.Ch == '>') {
+                        Text.NextCh();
+                        if (Text.Ch == '*') {
+                            Text.NextCh();
+                            Lex = lexArrow_Star;
+                        } else {
+                            Lex = lexArrow;
+                        }
+                    } else if (Text.Ch == '-') {
+                        Text.NextCh();
+                        Lex = lexMinus_Minus;
                     } else {
                         Lex = lexMinus;
                     }
@@ -413,6 +428,23 @@ private static void Comment() {
                         Lex = lexCaret;
                     }
                     break;
+                case '?':
+                    Text.NextCh();
+                    Lex = lexQuestion_Mark;
+                    break;
+                case '!':
+                    Text.NextCh();
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexNot_Eq;
+                    } else {
+                        Lex = lexExclaim;
+                    }
+                    break;
+                case '~':
+                    Text.NextCh();
+                    Lex = lexTilde;
+                    break;
                 case '#':
                     Text.NextCh();
                     if (Text.Ch == '#') {
@@ -431,112 +463,110 @@ private static void Comment() {
         }
     }
 
+
     static void Init() {
         InitChainHash();
 
-        Add2ChainHash(H, "alignas", lexAlignas);
-        Add2ChainHash(H, "alignof", lexAlignof);
-        Add2ChainHash(H, "and", lexAnd);
-        Add2ChainHash(H, "and_eq", lexAnd_Eq);
-        Add2ChainHash(H, "asm", lexAsm);
-        Add2ChainHash(H, "auto", lexAuto);
+        Add2ChainHash(H,    "alignas",             lexAlignas);
+        Add2ChainHash(H,    "alignof",             lexAlignof);
+        Add2ChainHash(H,    "and",                 lexAnd);
+        Add2ChainHash(H,    "and_eq",              lexAnd_Eq);
+        Add2ChainHash(H,    "asm",                 lexAsm);
+        Add2ChainHash(H,    "auto",                lexAuto);
 
-        Add2ChainHash(H, "bitand", lexBitand);
-        Add2ChainHash(H, "bitor", lexBitor);
-        Add2ChainHash(H, "bool", lexBool);
-        Add2ChainHash(H, "break", lexBreak);
+        Add2ChainHash(H,    "bitand",              lexBitand);
+        Add2ChainHash(H,    "bitor",               lexBitor);
+        Add2ChainHash(H,    "bool",                lexBool);
+        Add2ChainHash(H,    "break",               lexBreak);
 
-        Add2ChainHash(H, "case", lexCase);
-        Add2ChainHash(H, "catch", lexCatch);
-        Add2ChainHash(H, "char", lexChar);
-        Add2ChainHash(H, "char16_t", lexChar16_t);
-        Add2ChainHash(H, "char32_t", lexChar32_t);
-        Add2ChainHash(H, "class", lexClass);
-        Add2ChainHash(H, "comlp", lexComlp);
-        Add2ChainHash(H, "const", lexConst);
-        Add2ChainHash(H, "const_cast", lexConst_cast);
-        Add2ChainHash(H, "constexpr", lexConstexpr);
-        Add2ChainHash(H, "continue", lexContinue);
+        Add2ChainHash(H,    "case",                lexCase);
+        Add2ChainHash(H,    "catch",               lexCatch);
+        Add2ChainHash(H,    "char",                lexChar);
+        Add2ChainHash(H,    "char16_t",            lexChar16_t);
+        Add2ChainHash(H,    "char32_t",            lexChar32_t);
+        Add2ChainHash(H,    "class",               lexClass);
+        Add2ChainHash(H,    "comlp",               lexComlp);
+        Add2ChainHash(H,    "const",               lexConst);
+        Add2ChainHash(H,    "const_cast",          lexConst_cast);
+        Add2ChainHash(H,    "constexpr",           lexConstexpr);
+        Add2ChainHash(H,    "continue",            lexContinue);
 
-        Add2ChainHash(H, "decltype", lexDecltype);
-        Add2ChainHash(H, "default", lexDefault);
-        Add2ChainHash(H, "delete", lexDelete);
-        Add2ChainHash(H, "do", lexDo);
-        Add2ChainHash(H, "double", lexDouble);
-        Add2ChainHash(H, "dynamic_cast", lexDynamic_cast);
+        Add2ChainHash(H,    "decltype",            lexDecltype);
+        Add2ChainHash(H,    "default",             lexDefault);
+        Add2ChainHash(H,    "delete",              lexDelete);
+        Add2ChainHash(H,    "do",                  lexDo);
+        Add2ChainHash(H,    "double",              lexDouble);
+        Add2ChainHash(H,    "dynamic_cast",        lexDynamic_cast);
 
-        Add2ChainHash(H, "else", lexElse);
-        Add2ChainHash(H, "enum", lexEnum);
-        Add2ChainHash(H, "explicit", lexExplicit);
-        Add2ChainHash(H, "extern", lexExtern);
+        Add2ChainHash(H,    "else",                lexElse);
+        Add2ChainHash(H,    "enum",                lexEnum);
+        Add2ChainHash(H,    "explicit",            lexExplicit);
+        Add2ChainHash(H,    "extern",              lexExtern);
 
-        Add2ChainHash(H, "false", lexFalse);
-        Add2ChainHash(H, "final", lexFinal);
-        Add2ChainHash(H, "float", lexFloat);
-        Add2ChainHash(H, "friend", lexFriend);
-        Add2ChainHash(H, "for", lexFor);
+        Add2ChainHash(H,    "false",               lexFalse);
+        Add2ChainHash(H,    "final",               lexFinal);
+        Add2ChainHash(H,    "float",               lexFloat);
+        Add2ChainHash(H,    "friend",              lexFriend);
+        Add2ChainHash(H,    "for",                 lexFor);
 
-        Add2ChainHash(H, "goto", lexGoto);
+        Add2ChainHash(H,    "goto",                lexGoto);
 
-        Add2ChainHash(H, "if", lexIf);
-        Add2ChainHash(H, "inline", lexInline);
-        Add2ChainHash(H, "int", lexInt);
+        Add2ChainHash(H,    "if",                  lexIf);
+        Add2ChainHash(H,    "inline",              lexInline);
+        Add2ChainHash(H,    "int",                 lexInt);
 
-        Add2ChainHash(H, "long", lexLong);
+        Add2ChainHash(H,    "long",                lexLong);
 
-        Add2ChainHash(H, "mutable", lexMutable);
+        Add2ChainHash(H,    "mutable",             lexMutable);
 
-        Add2ChainHash(H, "namespace", lexNamespace);
-        Add2ChainHash(H, "new", lexNew);
-        Add2ChainHash(H, "noexcept", lexNoexcept);
-        Add2ChainHash(H, "not", lexNot);
-        Add2ChainHash(H, "not_eq", lexNot_eq);
-        Add2ChainHash(H, "nullptr", lexNullptr);
+        Add2ChainHash(H,    "namespace",           lexNamespace);
+        Add2ChainHash(H,    "new",                 lexNew);
+        Add2ChainHash(H,    "noexcept",            lexNoexcept);
+        Add2ChainHash(H,    "not",                 lexNot);
+        Add2ChainHash(H,    "not_eq",              lexNot_eq);
+        Add2ChainHash(H,    "nullptr",             lexNullptr);
 
-        Add2ChainHash(H, "operator", lexOperator);
-        Add2ChainHash(H, "or", lexOr);
-        Add2ChainHash(H, "or_eq", lexOr_eq);
-        Add2ChainHash(H, "override", lexOverride);
+        Add2ChainHash(H,    "operator",            lexOperator);
+        Add2ChainHash(H,    "or",                  lexOr);
+        Add2ChainHash(H,    "or_eq",               lexOr_eq);
+        Add2ChainHash(H,    "override",            lexOverride);
 
-        Add2ChainHash(H, "private", lexPrivate);
-        Add2ChainHash(H, "protected", lexProtected);
-        Add2ChainHash(H, "public", lexPublic);
+        Add2ChainHash(H,    "private",             lexPrivate);
+        Add2ChainHash(H,    "protected",           lexProtected);
+        Add2ChainHash(H,    "public",              lexPublic);
 
-        Add2ChainHash(H, "register", lexRegister);
-        Add2ChainHash(H, "reinterpret_cast", lexReinterpret_cast);
-        Add2ChainHash(H, "return", lexReturn);
+        Add2ChainHash(H,    "register",            lexRegister);
+        Add2ChainHash(H,    "reinterpret_cast",    lexReinterpret_cast);
+        Add2ChainHash(H,    "return",              lexReturn);
 
-        Add2ChainHash(H, "short", lexShort);
-        Add2ChainHash(H, "signed", lexSigned);
-        Add2ChainHash(H, "sizeof", lexSizeof);
-        Add2ChainHash(H, "static", lexStatic);
-        Add2ChainHash(H, "static_assert", lexStatic_assert);
-        Add2ChainHash(H, "static_cast", lexStatic_cast);
-        Add2ChainHash(H, "struct", lexStruct);
-        Add2ChainHash(H, "switch", lexSwitch);
+        Add2ChainHash(H,    "short",               lexShort);
+        Add2ChainHash(H,    "signed",              lexSigned);
+        Add2ChainHash(H,    "sizeof",              lexSizeof);
+        Add2ChainHash(H,    "static",              lexStatic);
+        Add2ChainHash(H,    "static_assert",       lexStatic_assert);
+        Add2ChainHash(H,    "static_cast",         lexStatic_cast);
+        Add2ChainHash(H,    "struct",              lexStruct);
+        Add2ChainHash(H,    "switch",              lexSwitch);
 
-        Add2ChainHash(H, "template", lexTemplate);
-        Add2ChainHash(H, "this", lexThis);
-        Add2ChainHash(H, "thread_local", lexThread_local);
-        Add2ChainHash(H, "throw", lexThrow);
-        Add2ChainHash(H, "true", lexTrue);
-        Add2ChainHash(H, "try", lexTry);
-        Add2ChainHash(H, "typedef", lexTypedef);
-        Add2ChainHash(H, "typeid", lexTypeid);
-        Add2ChainHash(H, "typename", lexTypename);
+        Add2ChainHash(H,    "template",            lexTemplate);
+        Add2ChainHash(H,    "this",                lexThis);
+        Add2ChainHash(H,    "thread_local",        lexThread_local);
+        Add2ChainHash(H,    "throw",               lexThrow);
+        Add2ChainHash(H,    "true",                lexTrue);
+        Add2ChainHash(H,    "try",                 lexTry);
+        Add2ChainHash(H,    "typedef",             lexTypedef);
+        Add2ChainHash(H,    "typeid",              lexTypeid);
+        Add2ChainHash(H,    "typename",            lexTypename);
 
-        Add2ChainHash(H, "union", lexUnion);
-        Add2ChainHash(H, "unsigned", lexUnsigned);
-        Add2ChainHash(H, "using", lexUsing);
+        Add2ChainHash(H,    "union",               lexUnion);
+        Add2ChainHash(H,    "unsigned",            lexUnsigned);
+        Add2ChainHash(H,    "using",               lexUsing);
 
-        Add2ChainHash(H, "virtual", lexVirtual);
-        Add2ChainHash(H, "void", lexVoid);
-        Add2ChainHash(H, "volatile", lexVolatile);
+        Add2ChainHash(H,    "virtual",             lexVirtual);
+        Add2ChainHash(H,    "void",                lexVoid);
+        Add2ChainHash(H,    "volatile",            lexVolatile);
 
-        Add2ChainHash(H, "wchar_t", lexWchar_t);
-        Add2ChainHash(H, "while", lexWhile);
-
-        NextLex();
+        Add2ChainHash(H,    "wchar_t",             lexWchar_t);
+        Add2ChainHash(H,    "while",               lexWhile);
     }
-
 }
