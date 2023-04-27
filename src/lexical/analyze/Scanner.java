@@ -10,8 +10,8 @@ package lexical.analyze;
 //
 class Scanner {
 
-    static int NAMELEN = 129;   //
-    static int N = 113;         //
+    static int NAMELEN = 140;   // Наибольшая длина имени (пока хз)
+    static int N = 175;         // Объем таблицы, где 70% заполняется (пока хз)
 
     final static int
         lexNone = 0,

@@ -21,8 +21,8 @@ public class CPlusPlus {
         } else {
             Location.Path = args[0];
         }
-        Init();         //
-        Pars.Compile(); //
-        Done();         //
+        Init();             // Инициализация текста и сканнера
+        Pars.Compile();     // Компиляция по заданию А
+        Done();             // Завершение работы
     }
 }
