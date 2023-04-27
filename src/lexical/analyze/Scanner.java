@@ -59,7 +59,11 @@ class Scanner {
         lexEllipsis = 42,       /* ... */           lexSemicolon = 85,      /* ; */         lexOpen_Paren = 127,        /* ( */
         lexComma = 43,          /* , */             lexOpen_Bracket = 86,   /* [ */         lexDot_Star = 128,          /* .* */
         lexOpen_Brace = 44,     /* { */             lexClose_Brace = 87,    /* } */         lexClose_Bracket = 129,     /* ] */
-        lexArrow_Star = 45;     /* ->* */
+        lexArrow_Star = 45,     /* ->* */           lexShift_Left_Eq = 88,  /* <<= */       lexShift_Right_Eq = 130,    /* >>= */
+        lexPlus_Plus = 46,      /* ++ */            lexMinus_Minus = 89,    /* -- */        lexExclaim = 131,           /* ! */
+        lexHash = 47,           /* # */             lexHash_Hash = 90,      /* ## */
+        lexEOT = 150;           /* /0 */
+
 
     //
     static int Lex;
@@ -178,31 +182,27 @@ class Scanner {
         } while (Character.isDigit((char)Text.Ch));
     }
 
-    private static void Comment() {
+    private static void CommentStar() {
         Text.NextCh();
         do {
             while (Text.Ch != '*' && Text.Ch != Text.chEOT) {
-                if (Text.Ch == '(') {
-                    Text.NextCh();
-                    if (Text.Ch == '*') {
-                        Comment();
-                    }
-                } else {
-                    Text.NextCh();
-                }
-                if (Text.Ch == '*') {
-                    Text.NextCh();
-                }
+                Text.NextCh();
             }
-        } while (Text.Ch != ')' && Text.Ch != Text.chEOT);
-        if (Text.Ch == ')') {
-            Text.NextCh();
-        } else {
+            if (Text.Ch == '*') {
+                Text.NextCh();
+            }
+        } while (Text.Ch != '/' && Text.Ch != Text.chEOT);
+        if (Text.Ch == Text.chEOT) {
             Location.LexPos = Location.Pos;
-            Error.Message("ЌҐ § Є®­зҐ­ Є®¬¬Ґ­в аЁ©");
+            Error.Message("Не закончен комментарий");
         }
     }
 
+    private static void Comment() {
+        while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
+            Text.NextCh();
+        }
+    }
 /*
 private static void Comment() {
    int Level = 1;
@@ -291,16 +291,27 @@ private static void Comment() {
                     break;
                 case '(':
                     Text.NextCh();
-                    if (Text.Ch == '*') {
-                        Comment();
-                        NextLex();
-                    } else {
-                        Lex = lexLPar;
-                    }
+                    Lex = lexOpen_Paren;
                     break;
                 case ')':
                     Text.NextCh();
-                    Lex = lexRPar;
+                    Lex = lexClose_Paren;
+                    break;
+                case '{':
+                    Text.NextCh();
+                    Lex = lexOpen_Brace;
+                    break;
+                case '}':
+                    Text.NextCh();
+                    Lex = lexClose_Brace;
+                    break;
+                case '[':
+                    Text.NextCh();
+                    Lex = lexOpen_Bracket;
+                    break;
+                case ']':
+                    Text.NextCh();
+                    Lex = lexClose_Bracket;
                     break;
                 case '+':
                     Text.NextCh();
@@ -327,6 +338,21 @@ private static void Comment() {
                         Lex = lexStar_Eq;
                     } else {
                         Lex = lexStar;
+                    }
+                    break;
+                case '/':
+                    Text.NextCh();
+                    if (Text.Ch == '*' ) {
+                        CommentStar();
+                        NextLex();
+                    } else if (Text.Ch == '/') {
+                        Comment();
+                        NextLex();
+                    } else if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexSlash_Eq;
+                    } else {
+                        Lex = lexSlash;
                     }
                     break;
                 case Text.chEOT:
@@ -397,7 +423,7 @@ private static void Comment() {
         Add2ChainHash(H, "new", lexNew);
         Add2ChainHash(H, "noexcept", lexNoexcept);
         Add2ChainHash(H, "not", lexNot);
-        Add2ChainHash(H, "not_eq", lexNot_Eq);
+        Add2ChainHash(H, "not_eq", lexNot_eq);
         Add2ChainHash(H, "nullptr", lexNullptr);
 
         Add2ChainHash(H, "operator", lexOperator);
