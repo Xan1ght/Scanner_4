@@ -10,38 +10,56 @@ package lexical.analyze;
 //
 class Scanner {
 
-    static int NAMELEN = 31;    //
-    static int N = 47;          //
+    static int NAMELEN = 129;   //
+    static int N = 113;         //
 
     final static int
         lexNone = 0,
         lexName = 1,
-        lexAlignas = 2,     lexAlignof = 28,            lexAnd = 54,        lexAnd_Eq = 79,         lexAsm = 104,
-        lexAuto = 3,        lexBitand = 29,             lexBitor = 55,      lexBool = 80,           lexBreak = 105,
-        lexCase = 4,        lexCatch = 30,              lexChar = 56,       lexChar16_t = 81,       lexChar32_t = 106,
-        lexClass = 5,       lexComlp = 31,              lexConst = 57,      lexConstexpr = 82,      lexConst_cast = 107,
-        lexContinue = 6,    lexDecltype = 32,           lexDefault = 58,    lexDelete = 83,         lexDo = 108,
-        lexDouble = 7,      lexDynamic_cast = 33,       lexElse = 59,       lexEnum = 84,           lexExplicit = 109,
-        lexExtern = 8,      lexFalse = 34,              lexFinal = 60,      lexFloat = 85,          lexFriend = 110,
-        lexFor = 9,         lexGoto = 35,               lexIf = 61,         lexInline = 86,         lexInt = 111,
-        lexLong = 10,       lexMutable = 36,            lexNamespace = 62,  lexNew = 87,            lexNoexcept = 112,
-        lexNot = 11,        lexNot_eq = 37,             lexNullptr = 63,    lexOperator = 88,       lexOr = 113,
-        lexOr_eq = 12,      lexOverride = 38,           lexPrivate = 64,    lexProtected = 89,      lexPublic = 114,
-        lexRegister = 13,   lexReinterpret_cast = 39,   lexReturn = 65,     lexShort = 90,          lexSigned = 115,
-        lexSizeof = 14,     lexStatic_assert = 40,      lexStatic = 66,     lexStatic_cast = 91,    lexStruct = 116,
-        lexSwitch = 15,     lexTemplate = 41,           lexThis = 67,       lexThread_local = 92,   lexThrow = 117,
-        lexTrue = 16,       lexTry = 42,                lexTypedef = 68,    lexTypeid = 93,         lexTypename = 118,
-        lexUnion = 17,      lexUnsigned = 43,           lexUsing = 69,      lexVirtual = 94,        lexVoid = 119,
-        lexVolatile = 18,   lexWchar_t = 44,            lexWhile = 70,      lexPlus = 95,           lexPlus_Eq = 120,
-        lexMinus = 19,      lexMinus_Eq = 45,           lexStar = 71,       lexStar_Eq = 96,        lexSlash = 121,
-        lexSlash_Eq = 20,   lexModulo = 46,             lexModulo_Eq = 72,  lexCaret = 97,          lexCaret_Eq = 122,
-        lexAmpersand = 21,  lexAmpersand_Eq = 47,       lexPipe = 73,       lexPipe_Eq = 98,        lexTilde = 123,
-        lexNot_Eq = 22,     lexLogical_And = 48,        lexAssign = 74,     lexLogical_Or = 99,     lexDouble_Colon = 124,
-        lexEqual = 23,      lexShift_Left = 49,         lexShift_Right = 75,lexQuestion_Mark = 100, lexColon = 125,
-        lexLess = 24,       lexLess_Eq = 50,            lexGreater = 76,    lexGreater_Eq = 101,    lexClose_Paren = 126,
-        lexDot = 25,        lexArrow = 51,              lexEllipsis = 77,   lexSemicolon = 102,     lexOpen_Paren = 127,
-        lexComma = 26,      lexOpen_Bracket = 52,       lexDot_Star = 78,   lexOpen_Brace = 103,    lexClose_Brace = 128,
-        lexClose_Bracket = 27,  lexArrow_Star = 53;
+        lexNum = 2,
+        lexAlignas = 3,         /* alignas */       lexAlignof = 46,        /* alignof */   lexAnd = 88,                /* and */
+        lexAnd_Eq = 4,          /* and_eq */        lexAsm = 47,            /* asm */       lexAuto = 89,               /* auto */
+        lexBitand = 5,          /* bitand */        lexBitor = 48,          /* bitor */     lexBool = 90,               /* bool */
+        lexBreak = 6,           /* break */         lexCase = 49,           /* case */      lexCatch = 91,              /* catch */
+        lexChar = 7,            /* char */          lexChar16_t = 50,       /* char16_t */  lexChar32_t = 92,           /* char32_t */
+        lexClass = 8,           /* class */         lexComlp = 51,          /* comlp */     lexConst = 93,              /* const */
+        lexConst_cast = 9,      /* const_cast */    lexConstexpr = 52,      /* constexpr */ lexContinue = 94,           /* continue */
+        lexDecltype = 10,       /* decltype */      lexDefault = 53,        /* default */   lexDelete = 95,             /* delete */
+        lexDo = 11,             /* do */            lexDouble = 54,         /* double */    lexDynamic_cast = 96,       /* dynamic_cast */
+        lexElse = 12,           /* else */          lexEnum = 55,           /* enum */      lexExplicit = 97,           /* explicit */
+        lexExtern = 13,         /* extern */        lexFalse = 56,          /* false */     lexFinal = 98,              /* final */
+        lexFloat = 14,          /* float */         lexFriend = 57,         /* friend */    lexFor = 99,                /* for */
+        lexGoto = 15,           /* goto */          lexIf = 58,             /* if */        lexInline = 100,            /* inline */
+        lexInt = 16,            /* int */           lexLong = 59,           /* long */      lexMutable = 101,           /* mutable */
+        lexNamespace = 17,      /* namespace */     lexNew = 60,            /* new */       lexNoexcept = 102,          /* noexcept */
+        lexNot = 18,            /* not */           lexNot_eq = 61,         /* not_eq */    lexNullptr = 103,           /* nullptr */
+        lexOperator = 19,       /* operator */      lexOr = 62,             /* or */        lexOr_eq = 104,             /* or_eq */
+        lexOverride = 20,       /* override */      lexPrivate = 63,        /* private */   lexProtected = 105,         /* protected */
+        lexPublic = 21,         /* public */        lexRegister = 64,       /* register */  lexReinterpret_cast = 106,  /* reinterpret_cast */
+        lexReturn = 22,         /* return */        lexShort = 65,          /* short */     lexSigned = 107,            /* signed */
+        lexSizeof = 23,         /* sizeof */        lexStatic = 66,         /* static */    lexStatic_assert = 108,     /* static_assert */
+        lexStatic_cast = 24,    /* static_cast */   lexStruct = 67,         /* struct */    lexSwitch = 109,            /* switch */
+        lexTemplate = 25,       /* template */      lexThis = 68,           /* this */      lexThread_local = 110,      /* thread_local */
+        lexThrow = 26,          /* throw */         lexTrue = 69,           /* true */      lexTry = 111,               /* try */
+        lexTypedef = 27,        /* typedef */       lexTypeid = 70,         /* typeid */    lexTypename = 112,          /* typename */
+        lexUnion = 28,          /* union */         lexUnsigned = 71,       /* unsigned */  lexUsing = 113,             /* using */
+        lexVirtual = 29,        /* virtual */       lexVoid = 72,           /* void */      lexVolatile = 114,          /* volatile */
+        lexWchar_t = 30,        /* wchar_t */       lexWhile = 73,          /* while */     lexPlus = 115,              /* + */
+        lexPlus_Eq = 31,        /* += */            lexMinus = 74,          /* - */         lexMinus_Eq = 116,          /* -= */
+        lexStar = 32,           /* * */             lexStar_Eq = 75,        /* *= */        lexSlash = 117,             /* / */
+        lexSlash_Eq = 33,       /* /= */            lexModulo = 76,         /* % */         lexModulo_Eq = 118,         /* %= */
+        lexCaret = 34,          /* ^ */             lexCaret_Eq = 77,       /* ^= */        lexAmpersand = 119,         /* & */
+        lexAmpersand_Eq = 35,   /* &= */            lexPipe = 78,           /* | */         lexPipe_Eq = 120,           /* |= */
+        lexTilde = 36,          /* ~ */             lexNot_Eq = 79,         /* != */        lexLogical_And = 121,       /* && */
+        lexAssign = 37,         /* = */             lexLogical_Or = 80,     /* || */        lexDouble_Colon = 122,      /* :: */
+        lexEqual = 38,          /* == */            lexShift_Left = 81,     /* << */        lexShift_Right = 123,       /* >> */
+        lexQuestion_Mark = 39,  /* ? */             lexColon = 82,          /* : */         lexLess = 124,              /* < */
+        lexLess_Eq = 40,        /* <= */            lexGreater = 83,        /* > */         lexGreater_Eq = 125,        /* >= */
+        lexClose_Paren = 41,    /* ) */             lexDot = 84,            /* . */         lexArrow = 126,             /* -> */
+        lexEllipsis = 42,       /* ... */           lexSemicolon = 85,      /* ; */         lexOpen_Paren = 127,        /* ( */
+        lexComma = 43,          /* , */             lexOpen_Bracket = 86,   /* [ */         lexDot_Star = 128,          /* .* */
+        lexOpen_Brace = 44,     /* { */             lexClose_Brace = 87,    /* } */         lexClose_Bracket = 129,     /* ] */
+        lexArrow_Star = 45;     /* ->* */
 
     //
     static int Lex;
@@ -77,11 +95,6 @@ class Scanner {
     private static tChainHash[] H;
 
 
-    private static void EnterKW(String Name, int Lex) {
-        (KWTable[nkw] = new Item()).key = new String(Name); // !!
-        KWTable[nkw++].data = Lex;
-    }
-
     private static int TestKW() {
         Item p = Search(H, Name);
         if (p != null) {
@@ -91,7 +104,7 @@ class Scanner {
         }
     }
 
-    void InitChainHash() {
+    static void InitChainHash() {
         for (int i = 0; i < N; i++) {
             H[i] = null;
         }
@@ -109,7 +122,7 @@ class Scanner {
         return Math.abs((int)(m % N));
     }
 
-    void Add2ChainHash(tChainHash[] T, String K, int D) {
+    static void Add2ChainHash(tChainHash[] T, String K, int D) {
         int h = ChainHash(K);
         Item p = T[h].items;
 
@@ -230,13 +243,13 @@ private static void Comment() {
             switch (Text.Ch) {
                 case ';':
                     Text.NextCh();
-                    Lex = lexSemi;
+                    Lex = lexSemicolon;
                     break;
                 case ':':
                     Text.NextCh();
-                    if (Text.Ch == '=') {
+                    if (Text.Ch == ':') {
                         Text.NextCh();
-                        Lex = lexAss;
+                        Lex = lexDouble_Colon;
                     } else {
                         Lex = lexColon;
                     }
@@ -251,28 +264,29 @@ private static void Comment() {
                     break;
                 case '=':
                     Text.NextCh();
-                    Lex = lexEQ;
-                    break;
-                case '#':
-                    Text.NextCh();
-                    Lex = lexNE;
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexEqual;
+                    } else {
+                        Lex = lexAssign;
+                    }
                     break;
                 case '<':
                     Text.NextCh();
                     if (Text.Ch == '=') {
                         Text.NextCh();
-                        Lex = lexLE;
+                        Lex = lexLess_Eq;
                     } else {
-                        Lex = lexLT;
+                        Lex = lexLess;
                     }
                     break;
                 case '>':
                     Text.NextCh();
                     if (Text.Ch == '=') {
                         Text.NextCh();
-                        Lex = lexGE;
+                        Lex = lexGreater_Eq;
                     } else {
-                        Lex = lexGT;
+                        Lex = lexGreater;
                     }
                     break;
                 case '(':
@@ -290,60 +304,144 @@ private static void Comment() {
                     break;
                 case '+':
                     Text.NextCh();
-                    Lex = lexPlus;
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexPlus_Eq;
+                    } else {
+                        Lex = lexPlus;
+                    }
                     break;
                 case '-':
                     Text.NextCh();
-                    Lex = lexMinus;
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexMinus_Eq;
+                    } else {
+                        Lex = lexMinus;
+                    }
                     break;
                 case '*':
                     Text.NextCh();
-                    Lex = lexMult;
+                    if (Text.Ch == '=') {
+                        Text.NextCh();
+                        Lex = lexStar_Eq;
+                    } else {
+                        Lex = lexStar;
+                    }
                     break;
                 case Text.chEOT:
                     Lex = lexEOT;
                     break;
                 default:
-                    Error.Message("ЌҐ¤®ЇгбвЁ¬л© бЁ¬ў®«");
+                    Error.Message("Недопустимый символ");
             }
         }
     }
 
     static void Init() {
-        EnterKW("ARRAY",     lexNone);
-        EnterKW("BY",        lexNone);
-        EnterKW("BEGIN",     lexBEGIN);
-        EnterKW("CASE",      lexNone);
-        EnterKW("CONST",     lexCONST);
-        EnterKW("DIV",       lexDIV);
-        EnterKW("DO",        lexDO);
-        EnterKW("ELSE",      lexELSE);
-        EnterKW("ELSIF",     lexELSIF);
-        EnterKW("END",       lexEND);
-        EnterKW("EXIT",      lexNone);
-        EnterKW("FOR",       lexNone);
-        EnterKW("IF",        lexIF);
-        EnterKW("IMPORT",    lexIMPORT);
-        EnterKW("IN",        lexNone);
-        EnterKW("IS",        lexNone);
-        EnterKW("LOOP",      lexNone);
-        EnterKW("MOD",       lexMOD);
-        EnterKW("MODULE",    lexMODULE);
-        EnterKW("NIL",       lexNone);
-        EnterKW("OF",        lexNone);
-        EnterKW("OR",        lexNone);
-        EnterKW("POINTER",   lexNone);
-        EnterKW("PROCEDURE", lexNone);
-        EnterKW("RECORD",    lexNone);
-        EnterKW("REPEAT",    lexNone);
-        EnterKW("RETURN",    lexNone);
-        EnterKW("THEN",      lexTHEN);
-        EnterKW("TO",        lexNone);
-        EnterKW("TYPE",      lexNone);
-        EnterKW("UNTIL",     lexNone);
-        EnterKW("VAR",       lexVAR);
-        EnterKW("WHILE",     lexWHILE);
-        EnterKW("WITH",      lexNone);
+        InitChainHash();
+
+        Add2ChainHash(H, "alignas", lexAlignas);
+        Add2ChainHash(H, "alignof", lexAlignof);
+        Add2ChainHash(H, "and", lexAnd);
+        Add2ChainHash(H, "and_eq", lexAnd_Eq);
+        Add2ChainHash(H, "asm", lexAsm);
+        Add2ChainHash(H, "auto", lexAuto);
+
+        Add2ChainHash(H, "bitand", lexBitand);
+        Add2ChainHash(H, "bitor", lexBitor);
+        Add2ChainHash(H, "bool", lexBool);
+        Add2ChainHash(H, "break", lexBreak);
+
+        Add2ChainHash(H, "case", lexCase);
+        Add2ChainHash(H, "catch", lexCatch);
+        Add2ChainHash(H, "char", lexChar);
+        Add2ChainHash(H, "char16_t", lexChar16_t);
+        Add2ChainHash(H, "char32_t", lexChar32_t);
+        Add2ChainHash(H, "class", lexClass);
+        Add2ChainHash(H, "comlp", lexComlp);
+        Add2ChainHash(H, "const", lexConst);
+        Add2ChainHash(H, "const_cast", lexConst_cast);
+        Add2ChainHash(H, "constexpr", lexConstexpr);
+        Add2ChainHash(H, "continue", lexContinue);
+
+        Add2ChainHash(H, "decltype", lexDecltype);
+        Add2ChainHash(H, "default", lexDefault);
+        Add2ChainHash(H, "delete", lexDelete);
+        Add2ChainHash(H, "do", lexDo);
+        Add2ChainHash(H, "double", lexDouble);
+        Add2ChainHash(H, "dynamic_cast", lexDynamic_cast);
+
+        Add2ChainHash(H, "else", lexElse);
+        Add2ChainHash(H, "enum", lexEnum);
+        Add2ChainHash(H, "explicit", lexExplicit);
+        Add2ChainHash(H, "extern", lexExtern);
+
+        Add2ChainHash(H, "false", lexFalse);
+        Add2ChainHash(H, "final", lexFinal);
+        Add2ChainHash(H, "float", lexFloat);
+        Add2ChainHash(H, "friend", lexFriend);
+        Add2ChainHash(H, "for", lexFor);
+
+        Add2ChainHash(H, "goto", lexGoto);
+
+        Add2ChainHash(H, "if", lexIf);
+        Add2ChainHash(H, "inline", lexInline);
+        Add2ChainHash(H, "int", lexInt);
+
+        Add2ChainHash(H, "long", lexLong);
+
+        Add2ChainHash(H, "mutable", lexMutable);
+
+        Add2ChainHash(H, "namespace", lexNamespace);
+        Add2ChainHash(H, "new", lexNew);
+        Add2ChainHash(H, "noexcept", lexNoexcept);
+        Add2ChainHash(H, "not", lexNot);
+        Add2ChainHash(H, "not_eq", lexNot_Eq);
+        Add2ChainHash(H, "nullptr", lexNullptr);
+
+        Add2ChainHash(H, "operator", lexOperator);
+        Add2ChainHash(H, "or", lexOr);
+        Add2ChainHash(H, "or_eq", lexOr_eq);
+        Add2ChainHash(H, "override", lexOverride);
+
+        Add2ChainHash(H, "private", lexPrivate);
+        Add2ChainHash(H, "protected", lexProtected);
+        Add2ChainHash(H, "public", lexPublic);
+
+        Add2ChainHash(H, "register", lexRegister);
+        Add2ChainHash(H, "reinterpret_cast", lexReinterpret_cast);
+        Add2ChainHash(H, "return", lexReturn);
+
+        Add2ChainHash(H, "short", lexShort);
+        Add2ChainHash(H, "signed", lexSigned);
+        Add2ChainHash(H, "sizeof", lexSizeof);
+        Add2ChainHash(H, "static", lexStatic);
+        Add2ChainHash(H, "static_assert", lexStatic_assert);
+        Add2ChainHash(H, "static_cast", lexStatic_cast);
+        Add2ChainHash(H, "struct", lexStruct);
+        Add2ChainHash(H, "switch", lexSwitch);
+
+        Add2ChainHash(H, "template", lexTemplate);
+        Add2ChainHash(H, "this", lexThis);
+        Add2ChainHash(H, "thread_local", lexThread_local);
+        Add2ChainHash(H, "throw", lexThrow);
+        Add2ChainHash(H, "true", lexTrue);
+        Add2ChainHash(H, "try", lexTry);
+        Add2ChainHash(H, "typedef", lexTypedef);
+        Add2ChainHash(H, "typeid", lexTypeid);
+        Add2ChainHash(H, "typename", lexTypename);
+
+        Add2ChainHash(H, "union", lexUnion);
+        Add2ChainHash(H, "unsigned", lexUnsigned);
+        Add2ChainHash(H, "using", lexUsing);
+
+        Add2ChainHash(H, "virtual", lexVirtual);
+        Add2ChainHash(H, "void", lexVoid);
+        Add2ChainHash(H, "volatile", lexVolatile);
+
+        Add2ChainHash(H, "wchar_t", lexWchar_t);
+        Add2ChainHash(H, "while", lexWhile);
 
         NextLex();
     }
