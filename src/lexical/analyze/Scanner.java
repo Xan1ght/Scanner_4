@@ -199,6 +199,7 @@ class Scanner {
             }
         } else {
             DecNumber();
+            SearchSuffixUL();
         }
 
 
