@@ -86,7 +86,9 @@ class Scanner {
         String key;
         int data;
         Item next;
+
         Item() {}
+
         Item(String key, int data, Item next) {
             this.key = key;
             this.data = data;
@@ -104,6 +106,7 @@ class Scanner {
 
     private static int TestKW() {
         Item p = Search(H, Name);
+
         if (p != null) {
             return p.data;
         } else {
@@ -112,7 +115,7 @@ class Scanner {
     }
 
 
-    static void InitChainHash() {
+    private static void InitChainHash() {
         for (int i = 0; i < N; i++) {
             H[i] = null;
         }
@@ -120,7 +123,7 @@ class Scanner {
 
 
     /* Плохая функция */
-    static int ChainHash(String K) {
+    private static int ChainHash(String K) {
         final int BASE = 17;
         long m = 0;
 
@@ -132,7 +135,7 @@ class Scanner {
     }
 
 
-    static void Add2ChainHash(tChainHash[] T, String K, int D) {
+    private static void Add2ChainHash(tChainHash[] T, String K, int D) {
         int h = ChainHash(K);
         Item p = T[h].items;
 
@@ -148,7 +151,7 @@ class Scanner {
 
 
     // Поиск
-    static Item Search(tChainHash[] T, String K) {
+    private static Item Search(tChainHash[] T, String K) {
         int h = ChainHash(K);
         Item p = T[h].items;
 
@@ -163,6 +166,7 @@ class Scanner {
     private static void Ident() {
         int i = 0;
         Buf.setLength(0);
+
         do {
             if (i++ < NAMELEN) {
                 Buf.append((char) Text.Ch);
@@ -171,6 +175,7 @@ class Scanner {
             }
             Text.NextCh();
         } while (Character.isLetterOrDigit((char)Text.Ch));
+
         Name = Buf.toString();
         Lex = TestKW(); //
     }
@@ -180,9 +185,36 @@ class Scanner {
         Lex = lexNum;
         Num = 0;
 
+        if (Text.Ch == '0') {
+            Text.NextCh();
+            if (Text.Ch == 'x' || Text.Ch == 'X') {
+                HexNumber();
+            } else if (Character.isDigit((char)Text.Ch)) {
+                OctNumber();
+            } else {
+                DecNumber();
+            }
+        } else {
+            DecNumber();
+        }
+
+
+
+//        do {
+//            int d = Text.Ch - '0';
+//            if ((Integer.MAX_VALUE - d)/10 >= Num) {
+//                Num = 10 * Num + d;
+//            } else {
+//                Error.Message("Слишком большое число");
+//            }
+//            Text.NextCh();
+//        } while (Character.isDigit((char)Text.Ch));
+    }
+
+    private static void OctNumber() {
         do {
             int d = Text.Ch - '0';
-            if ((Integer.MAX_VALUE - d)/10 >= Num) {
+            if ((Integer.MAX_VALUE - d)/8 >= Num) {
                 Num = 10 * Num + d;
             } else {
                 Error.Message("Слишком большое число");
@@ -191,9 +223,31 @@ class Scanner {
         } while (Character.isDigit((char)Text.Ch));
     }
 
+    private static void HexNumber() {
+
+    }
+
+    private static void DecNumber() {
+
+//        do {
+//            int d = Text.Ch - '0';
+//            if ((Integer.MAX_VALUE - d)/10 >= Num) {
+//                Num = 10 * Num + d;
+//            } else {
+//                Error.Message("Слишком большое число");
+//            }
+//            Text.NextCh();
+//        } while (Character.isDigit((char)Text.Ch));
+    }
+
+    private static void SearchSuffix() {
+
+    }
+
 
     private static void CommentStar() {
         Text.NextCh();
+
         do {
             while (Text.Ch != '*' && Text.Ch != Text.chEOT) {
                 Text.NextCh();
@@ -202,6 +256,7 @@ class Scanner {
                 Text.NextCh();
             }
         } while (Text.Ch != '/' && Text.Ch != Text.chEOT);
+
         if (Text.Ch == Text.chEOT) {
             Location.LexPos = Location.Pos;
             Error.Message("Не закончен комментарий");
