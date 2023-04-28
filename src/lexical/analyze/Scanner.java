@@ -189,10 +189,13 @@ class Scanner {
             Text.NextCh();
             if (Text.Ch == 'x' || Text.Ch == 'X') {
                 HexNumber();
+                SearchSuffixUL();
             } else if (Character.isDigit((char)Text.Ch)) {
                 OctNumber();
+                SearchSuffixUL();
             } else {
                 DecNumber();
+                SearchSuffixUL();
             }
         } else {
             DecNumber();
@@ -240,8 +243,16 @@ class Scanner {
 //        } while (Character.isDigit((char)Text.Ch));
     }
 
-    private static void SearchSuffix() {
-
+    private static void SearchSuffixUL() {
+        if (Text.Ch == 'U' || Text.Ch == 'u') {
+            Text.NextCh();
+        }
+        if (Text.Ch == 'L' || Text.Ch == 'l') {
+            Text.NextCh();
+            if (Text.Ch == 'L' || Text.Ch == 'l') {
+                Text.NextCh();
+            }
+        }
     }
 
 
