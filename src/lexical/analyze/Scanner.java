@@ -16,7 +16,13 @@ class Scanner {
     final static int
         lexNone = 0,
         lexName = 1,
-        lexNum = 2,
+        lexNum = 2,             /* число-в10 */     lexNumOct = 3,          /* ч-в8 */      lexNumHex = 4,              /* ч-в16 */
+        lexNumU = 3,            /* ч-в10-U */       lexNumOctU = 3,         /* ч-в8-U */    lexNumHexU = 3,             /* ч-в16-U */
+        lexNumUL = 4,           /* ч-в10-UL */      lexNumOctUL = 4,        /* ч-в8-UL */   lexNumHexUL = 4,            /* ч-в16-UL */
+        lexNumULL = 5,          /* ч-в10-ULL */     lexNumOctULL = 5,       /* ч-в8-ULL */  lexNumHexULL = 5,           /* ч-в16-ULL */
+        lexNumL = 6,            /* ч-в10-L */       lexNumOctL = 6,         /* ч-в8-L */    lexNumHexL = 6,             /* ч-в16-L */
+        lexNumLL = 7,           /* ч-в10-LL */      lexNumOctLL = 7,        /* ч-в8-LL */   lexNumHexLL = 7,            /* ч-в16-LL */
+        lexNumFloat = 8,        /* ч-float */       lexNumDouble = 9,       /* ч-double */  lexNumDoubleL = 10,            /* ч-double L */
         lexAlignas = 3,         /* alignas */       lexAlignof = 46,        /* alignof */   lexAnd = 88,                /* and */
         lexAnd_Eq = 4,          /* and_eq */        lexAsm = 47,            /* asm */       lexAuto = 89,               /* auto */
         lexBitand = 5,          /* bitand */        lexBitor = 48,          /* bitor */     lexBool = 90,               /* bool */
@@ -165,6 +171,7 @@ class Scanner {
 
     private static void Ident() {
         int i = 0;
+        boolean isDecNum = false;
         Buf.setLength(0);
 
         do {
@@ -174,32 +181,108 @@ class Scanner {
                 Error.Message("Слишком длинное имя");
             }
             Text.NextCh();
-        } while (Character.isLetterOrDigit((char)Text.Ch));
+        } while ((Character.isLetterOrDigit((char)Text.Ch)) && (!isDecNum));
 
         Name = Buf.toString();
         Lex = TestKW(); //
     }
 
-
+    // Идентификатор-Число
     private static void Number() {
         Lex = lexNum;
         Num = 0;
 
-        if (Text.Ch == '0') {
+        if (Text.Ch == '0') {                                   // Проверка наличия у первого числа "0":
             Text.NextCh();
-            if (Text.Ch == 'x' || Text.Ch == 'X') {
-                HexNumber();
-                SearchSuffixUL();
-            } else if (Character.isDigit((char)Text.Ch)) {
-                OctNumber();
-                SearchSuffixUL();
-            } else {
-                DecNumber();
-                SearchSuffixUL();
+            if (Text.Ch == 'x' || Text.Ch == 'X') {                 // (1) Если "0х", значит число "должно быть" в 16
+                HexNumber();                                        // "Должно быть"
+                if (SearchSuffixU()) {                              // Если есть в конце U, то unsigned +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то unsigned long +
+                        if (SearchSuffixL()) {                      // Если есть в конце L, то unsigned long long.
+                            Lex = lexNumHexULL;
+                        } else {
+                            Lex = lexNumHexUL;
+                        }
+                    } else {
+                        Lex = lexNumHexU;
+                    }
+                } else if (SearchSuffixL()) {                       // Если нет  в конце U, но есть L, то long +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то long long.
+                        Lex =lexNumHexLL;
+                    } else {
+                        Lex = lexNumHexL;
+                    }
+                } else {                                            // Если нет  в конце U и L, то просто в 16.
+                    Lex = lexNumHex;
+                }
+            } else if (Character.isDigit((char)Text.Ch)) {          // (2) Если "0 с цифрой", значит число "должно быть" в 8
+                OctNumber();                                        // "Должно быть"
+                if (SearchSuffixU()) {                              // Если есть в конце U, то unsigned +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то unsigned long +
+                        if (SearchSuffixL()) {                      // Если есть в конце L, то unsigned long long.
+                            Lex = lexNumOctULL;
+                        } else {
+                            Lex = lexNumOctUL;
+                        }
+                    } else {
+                        Lex = lexNumOctU;
+                    }
+                } else if (SearchSuffixL()) {                       // Если нет  в конце U, но есть L, то long +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то long long.
+                        Lex =lexNumOctLL;
+                    } else {
+                        Lex = lexNumOctL;
+                    }
+                } else {                                            // Если нет  в конце U и L, то просто в 8.
+                    Lex = lexNumOct;
+                }
+            } else if (Text.Ch == '.') {                            // (3) Если "0.", значит число "должно быть" в double/float
+                DecNumber();                                        // "Должно быть" просто в 10
+                if (SearchSuffixE()) {                              // Если есть E, то 100% double/float + проверка ошибки
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то long.
+                        Lex = lexNumDoubleL;
+                    } else if (SearchSuffixF()) {                   // Если нет  в конце L, но есть F, то float.
+                        Lex = lexNumFloat;
+                    } else {                                        // Если нет  в конце L и F, то просто в double.
+                        Lex = lexNumDouble;
+                    }
+                } else if (SearchSuffixL()) {                       // Если нет E, но есть в конце L, то long.
+                    Lex = lexNumDoubleL;
+                } else if (SearchSuffixF()) {                       // Если нет E, но есть в конце F, то float.
+                    Lex = lexNumFloat;
+                } else {                                            // Если нет E, и нет   в конце L и F, то просто в double.
+                    Lex = lexNumDouble;
+                }
+            } else {                                                // (4) Если "0" и только, значит число должно быть в 10
+                if (SearchSuffixU()) {                              // Если есть в конце U, то unsigned +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то unsigned long +
+                        if (SearchSuffixL()) {                      // Если есть в конце L, то unsigned long long.
+                            Lex = lexNumULL;
+                        } else {
+                            Lex = lexNumUL;
+                        }
+                    } else {
+                        Lex = lexNumU;
+                    }
+                } else if (SearchSuffixL()) {                       // Если нет  в конце U, но есть L, то long +
+                    if (SearchSuffixL()) {                          // Если есть в конце L, то long long.
+                        Lex =lexNumLL;
+                    } else {
+                        Lex = lexNumL;
+                    }
+                } else {                                            // Если нет  в конце U и L, то просто в 10.
+                    Lex = lexNum;
+                }
             }
-        } else {
-            DecNumber();
-            SearchSuffixUL();
+        } else {                                                // Если
+            Text.NextCh();
+            if (Text.Ch == '.') {
+                DecNumber();
+
+            } else {
+
+            }
+
         }
 
 
@@ -217,21 +300,20 @@ class Scanner {
 
     private static void OctNumber() {
         do {
-            int d = Text.Ch - '0';
-            if ((Integer.MAX_VALUE - d)/8 >= Num) {
-                Num = 10 * Num + d;
-            } else {
-                Error.Message("Слишком большое число");
-            }
             Text.NextCh();
         } while (Character.isDigit((char)Text.Ch));
     }
 
     private static void HexNumber() {
-
+        do {
+            Text.NextCh();
+        } while (Character.isDigit((char)Text.Ch));
     }
 
     private static void DecNumber() {
+        do {
+            Text.NextCh();
+        } while (Character.isDigit((char)Text.Ch));
 
 //        do {
 //            int d = Text.Ch - '0';
@@ -244,15 +326,51 @@ class Scanner {
 //        } while (Character.isDigit((char)Text.Ch));
     }
 
-    private static void SearchSuffixUL() {
+    private static void SearchSuffix() {
+
+    }
+
+
+    private static boolean SearchSuffixE() {
+        if (Text.Ch == 'E' || Text.Ch == 'e') {
+            Text.NextCh();
+            if (Text.Ch == '-') {
+                DecNumber();
+            } else if (Character.isDigit((char)Text.Ch)) {
+                DecNumber();
+            } else {
+                System.out.println("Error");
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean SearchSuffixF() {
+        if (Text.Ch == 'F' || Text.Ch == 'f') {
+            Text.NextCh();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean SearchSuffixU() {
         if (Text.Ch == 'U' || Text.Ch == 'u') {
             Text.NextCh();
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    private static boolean SearchSuffixL() {
         if (Text.Ch == 'L' || Text.Ch == 'l') {
             Text.NextCh();
-            if (Text.Ch == 'L' || Text.Ch == 'l') {
-                Text.NextCh();
-            }
+            return true;
+        } else {
+            return false;
         }
     }
 
