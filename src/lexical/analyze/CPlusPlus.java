@@ -15,7 +15,7 @@ public class CPlusPlus {
     }
 
     public static void main(String[] args) {
-        System.out.println("\n Компилятор С++");
+        System.out.println("\nКомпилятор С++");
         if (args.length == 0) {
             Location.Path = null;
         } else {

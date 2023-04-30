@@ -9,10 +9,15 @@ class Pars {
             if (Scanner.Lex != Scanner.lexNone) {
                 Counter.Add();
             }
+            Scanner.NextLex();
         }
 
-        System.out.println("\nКомпиляция задачи А завершена.\n");
+        System.out.println("\n\nКомпиляция задачи А завершена.\n");
 
-        Counter.Info();
+        Counter.InfoAllLex();
+
+        System.out.println("\nКомпиляция других подзадач завершена.\n");
+
+        Counter.InfoLex();
     }
 }

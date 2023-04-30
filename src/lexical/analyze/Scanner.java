@@ -16,64 +16,64 @@ class Scanner {
     final static int
         lexNone = 0,
         lexName = 1,
-        lexNum = 2,             /* число-в10 */     lexNumOct = 3,          /* ч-в8 */      lexNumHex = 4,              /* ч-в16 */
-        lexNumU = 3,            /* ч-в10-U */       lexNumOctU = 3,         /* ч-в8-U */    lexNumHexU = 3,             /* ч-в16-U */
-        lexNumUL = 4,           /* ч-в10-UL */      lexNumOctUL = 4,        /* ч-в8-UL */   lexNumHexUL = 4,            /* ч-в16-UL */
-        lexNumULL = 5,          /* ч-в10-ULL */     lexNumOctULL = 5,       /* ч-в8-ULL */  lexNumHexULL = 5,           /* ч-в16-ULL */
-        lexNumL = 6,            /* ч-в10-L */       lexNumOctL = 6,         /* ч-в8-L */    lexNumHexL = 6,             /* ч-в16-L */
-        lexNumLL = 7,           /* ч-в10-LL */      lexNumOctLL = 7,        /* ч-в8-LL */   lexNumHexLL = 7,            /* ч-в16-LL */
-        lexNumBin = 8,          /* ч-вbin */        lexNumBinL = 8,         /* ч-вbin-L */  lexNumBinLL = 8,            /* ч-вbin-LL */
-        lexNumBinU = 8,         /* ч-вbin-U */      lexNumBinUL = 8,        /* ч-вbin-UL */ lexNumBinULL = 8,           /* ч-вbin-ULL */
-        lexNumFloat = 10,       /* ч-float */       lexNumDouble = 9,       /* ч-double */  lexNumDoubleL = 10,         /* ч-double-L */
-        lexAlignas = 3,         /* alignas */       lexAlignof = 46,        /* alignof */   lexAnd = 88,                /* and */
-        lexAnd_Eq = 4,          /* and_eq */        lexAsm = 47,            /* asm */       lexAuto = 89,               /* auto */
-        lexBitand = 5,          /* bitand */        lexBitor = 48,          /* bitor */     lexBool = 90,               /* bool */
-        lexBreak = 6,           /* break */         lexCase = 49,           /* case */      lexCatch = 91,              /* catch */
-        lexChar = 7,            /* char */          lexChar16_t = 50,       /* char16_t */  lexChar32_t = 92,           /* char32_t */
-        lexClass = 8,           /* class */         lexComlp = 51,          /* comlp */     lexConst = 93,              /* const */
-        lexConst_cast = 9,      /* const_cast */    lexConstexpr = 52,      /* constexpr */ lexContinue = 94,           /* continue */
-        lexDecltype = 10,       /* decltype */      lexDefault = 53,        /* default */   lexDelete = 95,             /* delete */
-        lexDo = 11,             /* do */            lexDouble = 54,         /* double */    lexDynamic_cast = 96,       /* dynamic_cast */
-        lexElse = 12,           /* else */          lexEnum = 55,           /* enum */      lexExplicit = 97,           /* explicit */
-        lexExtern = 13,         /* extern */        lexFalse = 56,          /* false */     lexFinal = 98,              /* final */
-        lexFloat = 14,          /* float */         lexFriend = 57,         /* friend */    lexFor = 99,                /* for */
-        lexGoto = 15,           /* goto */          lexIf = 58,             /* if */        lexInline = 100,            /* inline */
-        lexInt = 16,            /* int */           lexLong = 59,           /* long */      lexMutable = 101,           /* mutable */
-        lexNamespace = 17,      /* namespace */     lexNew = 60,            /* new */       lexNoexcept = 102,          /* noexcept */
-        lexNot = 18,            /* not */           lexNot_eq = 61,         /* not_eq */    lexNullptr = 103,           /* nullptr */
-        lexOperator = 19,       /* operator */      lexOr = 62,             /* or */        lexOr_eq = 104,             /* or_eq */
-        lexOverride = 20,       /* override */      lexPrivate = 63,        /* private */   lexProtected = 105,         /* protected */
-        lexPublic = 21,         /* public */        lexRegister = 64,       /* register */  lexReinterpret_cast = 106,  /* reinterpret_cast */
-        lexReturn = 22,         /* return */        lexShort = 65,          /* short */     lexSigned = 107,            /* signed */
-        lexSizeof = 23,         /* sizeof */        lexStatic = 66,         /* static */    lexStatic_assert = 108,     /* static_assert */
-        lexStatic_cast = 24,    /* static_cast */   lexStruct = 67,         /* struct */    lexSwitch = 109,            /* switch */
-        lexTemplate = 25,       /* template */      lexThis = 68,           /* this */      lexThread_local = 110,      /* thread_local */
-        lexThrow = 26,          /* throw */         lexTrue = 69,           /* true */      lexTry = 111,               /* try */
-        lexTypedef = 27,        /* typedef */       lexTypeid = 70,         /* typeid */    lexTypename = 112,          /* typename */
-        lexUnion = 28,          /* union */         lexUnsigned = 71,       /* unsigned */  lexUsing = 113,             /* using */
-        lexVirtual = 29,        /* virtual */       lexVoid = 72,           /* void */      lexVolatile = 114,          /* volatile */
-        lexWchar_t = 30,        /* wchar_t */       lexWhile = 73,          /* while */     lexPlus = 115,              /* + */
-        lexPlus_Eq = 31,        /* += */            lexMinus = 74,          /* - */         lexMinus_Eq = 116,          /* -= */
-        lexStar = 32,           /* * */             lexStar_Eq = 75,        /* *= */        lexSlash = 117,             /* / */
-        lexSlash_Eq = 33,       /* /= */            lexModulo = 76,         /* % */         lexModulo_Eq = 118,         /* %= */
-        lexCaret = 34,          /* ^ */             lexCaret_Eq = 77,       /* ^= */        lexAmpersand = 119,         /* & */
-        lexAmpersand_Eq = 35,   /* &= */            lexPipe = 78,           /* | */         lexPipe_Eq = 120,           /* |= */
-        lexTilde = 36,          /* ~ */             lexNot_Eq = 79,         /* != */        lexLogical_And = 121,       /* && */
-        lexAssign = 37,         /* = */             lexLogical_Or = 80,     /* || */        lexDouble_Colon = 122,      /* :: */
-        lexEqual = 38,          /* == */            lexShift_Left = 81,     /* << */        lexShift_Right = 123,       /* >> */
-        lexQuestion_Mark = 39,  /* ? */             lexColon = 82,          /* : */         lexLess = 124,              /* < */
-        lexLess_Eq = 40,        /* <= */            lexGreater = 83,        /* > */         lexGreater_Eq = 125,        /* >= */
-        lexClose_Paren = 41,    /* ) */             lexDot = 84,            /* . */         lexArrow = 126,             /* -> */
-        lexEllipsis = 42,       /* ... */           lexSemicolon = 85,      /* ; */         lexOpen_Paren = 127,        /* ( */
-        lexComma = 43,          /* , */             lexOpen_Bracket = 86,   /* [ */         lexDot_Star = 128,          /* .* */
-        lexOpen_Brace = 44,     /* { */             lexClose_Brace = 87,    /* } */         lexClose_Bracket = 129,     /* ] */
-        lexArrow_Star = 45,     /* ->* */           lexShift_Left_Eq = 88,  /* <<= */       lexShift_Right_Eq = 130,    /* >>= */
-        lexPlus_Plus = 46,      /* ++ */            lexMinus_Minus = 89,    /* -- */        lexExclaim = 131,           /* ! */
-        lexHash = 47,           /* # */             lexHash_Hash = 90,      /* ## */
+        lexNum = 2,             /* число-в10 */     lexNumOct = 56,          /* ч-в8 */      lexNumHex = 110,              /* ч-в16 */
+        lexNumU = 3,            /* ч-в10-U */       lexNumOctU = 57,         /* ч-в8-U */   lexNumHexU = 111,             /* ч-в16-U */
+        lexNumUL = 4,           /* ч-в10-UL */      lexNumOctUL = 58,        /* ч-в8-UL */  lexNumHexUL = 112,            /* ч-в16-UL */
+        lexNumULL = 5,          /* ч-в10-ULL */     lexNumOctULL = 59,       /* ч-в8-ULL */ lexNumHexULL = 113,           /* ч-в16-ULL */
+        lexNumL = 6,            /* ч-в10-L */       lexNumOctL = 60,         /* ч-в8-L */   lexNumHexL = 114,             /* ч-в16-L */
+        lexNumLL = 7,           /* ч-в10-LL */      lexNumOctLL = 61,        /* ч-в8-LL */  lexNumHexLL = 115,            /* ч-в16-LL */
+        lexNumBin = 8,          /* ч-вbin */        lexNumBinL = 62,         /* ч-вbin-L */ lexNumBinLL = 116,            /* ч-вbin-LL */
+        lexNumBinU = 9,         /* ч-вbin-U */      lexNumBinUL = 63,        /* ч-вbin-UL */lexNumBinULL = 117,           /* ч-вbin-ULL */
+        lexNumFloat = 10,       /* ч-float */       lexNumDouble = 64,      /* ч-double */ lexNumDoubleL = 118,         /* ч-double-L */
+        lexAlignas = 11,         /* alignas */      lexAlignof = 65,        /* alignof */   lexAnd = 119,               /* and */
+        lexAnd_Eq = 12,          /* and_eq */       lexAsm = 66,            /* asm */       lexAuto = 120,               /* auto */
+        lexBitand = 13,          /* bitand */       lexBitor = 67,          /* bitor */     lexBool = 121,               /* bool */
+        lexBreak = 14,           /* break */        lexCase = 68,           /* case */      lexCatch = 122,              /* catch */
+        lexChar = 15,            /* char */         lexChar16_t = 69,       /* char16_t */  lexChar32_t = 123,           /* char32_t */
+        lexClass = 16,           /* class */        lexComlp = 70,          /* comlp */     lexConst = 124,              /* const */
+        lexConst_cast = 17,      /* const_cast */   lexConstexpr = 71,      /* constexpr */ lexContinue = 125,           /* continue */
+        lexDecltype = 18,       /* decltype */      lexDefault = 72,        /* default */   lexDelete = 126,             /* delete */
+        lexDo = 19,             /* do */            lexDouble = 73,         /* double */    lexDynamic_cast = 127,       /* dynamic_cast */
+        lexElse = 20,           /* else */          lexEnum = 74,           /* enum */      lexExplicit = 128,           /* explicit */
+        lexExtern = 21,         /* extern */        lexFalse = 75,          /* false */     lexFinal = 129,              /* final */
+        lexFloat = 22,          /* float */         lexFriend = 76,         /* friend */    lexFor = 130,                /* for */
+        lexGoto = 23,           /* goto */          lexIf = 77,             /* if */        lexInline = 131,            /* inline */
+        lexInt = 24,            /* int */           lexLong = 78,           /* long */      lexMutable = 132,           /* mutable */
+        lexNamespace = 25,      /* namespace */     lexNew = 79,            /* new */       lexNoexcept = 133,          /* noexcept */
+        lexNot = 26,            /* not */           lexNot_eq = 80,         /* not_eq */    lexNullptr = 134,           /* nullptr */
+        lexOperator = 27,       /* operator */      lexOr = 81,             /* or */        lexOr_eq = 135,             /* or_eq */
+        lexOverride = 28,       /* override */      lexPrivate = 82,        /* private */   lexProtected = 136,         /* protected */
+        lexPublic = 29,         /* public */        lexRegister = 83,       /* register */  lexReinterpret_cast = 137,  /* reinterpret_cast */
+        lexReturn = 30,         /* return */        lexShort = 84,          /* short */     lexSigned = 138,            /* signed */
+        lexSizeof = 31,         /* sizeof */        lexStatic = 85,         /* static */    lexStatic_assert = 139,     /* static_assert */
+        lexStatic_cast = 32,    /* static_cast */   lexStruct = 86,         /* struct */    lexSwitch = 140,            /* switch */
+        lexTemplate = 33,       /* template */      lexThis = 87,           /* this */      lexThread_local = 141,      /* thread_local */
+        lexThrow = 34,          /* throw */         lexTrue = 88,           /* true */      lexTry = 142,               /* try */
+        lexTypedef = 35,        /* typedef */       lexTypeid = 89,         /* typeid */    lexTypename = 143,          /* typename */
+        lexUnion = 36,          /* union */         lexUnsigned = 90,       /* unsigned */  lexUsing = 144,             /* using */
+        lexVirtual = 37,        /* virtual */       lexVoid = 91,           /* void */      lexVolatile = 145,          /* volatile */
+        lexWchar_t = 38,        /* wchar_t */       lexWhile = 92,          /* while */     lexPlus = 146,              /* + */
+        lexPlus_Eq = 39,        /* += */            lexMinus = 93,          /* - */         lexMinus_Eq = 147,          /* -= */
+        lexStar = 40,           /* * */             lexStar_Eq = 94,        /* *= */        lexSlash = 148,             /* / */
+        lexSlash_Eq = 41,       /* /= */            lexModulo = 95,         /* % */         lexModulo_Eq = 149,         /* %= */
+        lexCaret = 42,          /* ^ */             lexCaret_Eq = 96,       /* ^= */        lexAmpersand = 150,         /* & */
+        lexAmpersand_Eq = 43,   /* &= */            lexPipe = 97,           /* | */         lexPipe_Eq = 151,           /* |= */
+        lexTilde = 44,          /* ~ */             lexNot_Eq = 98,         /* != */        lexLogical_And = 152,       /* && */
+        lexAssign = 45,         /* = */             lexLogical_Or = 99,     /* || */        lexDouble_Colon = 153,      /* :: */
+        lexEqual = 46,          /* == */            lexShift_Left = 100,     /* << */       lexShift_Right = 154,       /* >> */
+        lexQuestion_Mark = 47,  /* ? */             lexColon = 101,          /* : */        lexLess = 155,              /* < */
+        lexLess_Eq = 48,        /* <= */            lexGreater = 102,        /* > */        lexGreater_Eq = 156,        /* >= */
+        lexClose_Paren = 49,    /* ) */             lexDot = 103,            /* . */        lexArrow = 157,             /* -> */
+        lexEllipsis = 50,       /* ... */           lexSemicolon = 104,      /* ; */        lexOpen_Paren = 158,        /* ( */
+        lexComma = 51,          /* , */             lexOpen_Bracket = 105,   /* [ */        lexDot_Star = 159,          /* .* */
+        lexOpen_Brace = 52,     /* { */             lexClose_Brace = 106,    /* } */        lexClose_Bracket = 160,     /* ] */
+        lexArrow_Star = 53,     /* ->* */           lexShift_Left_Eq = 107,  /* <<= */      lexShift_Right_Eq = 161,    /* >>= */
+        lexPlus_Plus = 54,      /* ++ */            lexMinus_Minus = 108,    /* -- */       lexExclaim = 162,           /* ! */
+        lexHash = 55,           /* # */             lexHash_Hash = 109,      /* ## */
 
 
 
-        lexEOT = 150;           /* /0 */
+        lexEOT = 170;           /* /0 */
 
 
     //
@@ -90,7 +90,7 @@ class Scanner {
 
 
 
-    static private class Item {
+    static public class Item {
         String key;
         int data;
         Item next;
@@ -104,12 +104,12 @@ class Scanner {
         }
     }
 
-    static private class tChainHash {
+    static public class tChainHash {
         Item items;
     }
 
-    private static Item[] KWTable = new Item[KWNUM];
-    private static tChainHash[] H;
+    // private static Item[] KWTable = new Item[KWNUM];
+    public static tChainHash[] H = new tChainHash[N];
 
 
     private static int TestKW() {
@@ -125,7 +125,7 @@ class Scanner {
 
     private static void InitChainHash() {
         for (int i = 0; i < N; i++) {
-            H[i] = null;
+            H[i] = new tChainHash();
         }
     }
 
@@ -159,11 +159,11 @@ class Scanner {
 
 
     // Поиск
-    private static Item Search(tChainHash[] T, String K) {
+    public static Item Search(tChainHash[] T, String K) {
         int h = ChainHash(K);
         Item p = T[h].items;
 
-        while (p != null && K != p.key) {
+        while (p != null && !K.equals(p.key)) {
             p = p.next;
         }
 
@@ -173,7 +173,6 @@ class Scanner {
 
     private static void Ident() {
         int i = 0;
-        boolean isDecNum = false;
         Buf.setLength(0);
 
         do {
@@ -183,7 +182,7 @@ class Scanner {
                 Error.Message("Слишком длинное имя");
             }
             Text.NextCh();
-        } while ((Character.isLetterOrDigit((char)Text.Ch)) && (!isDecNum));
+        } while (Character.isLetterOrDigit((char)Text.Ch));
 
         Name = Buf.toString();
         Lex = TestKW(); //
@@ -363,20 +362,7 @@ class Scanner {
             } else {                                            // Если нет  в конце U и L, то просто в 10.
                 Lex = lexNum;
             }
-
         }
-
-
-
-//        do {
-//            int d = Text.Ch - '0';
-//            if ((Integer.MAX_VALUE - d)/10 >= Num) {
-//                Num = 10 * Num + d;
-//            } else {
-//                Error.Message("Слишком большое число");
-//            }
-//            Text.NextCh();
-//        } while (Character.isDigit((char)Text.Ch));
     }
 
     private static void BinNumber() {
@@ -401,6 +387,7 @@ class Scanner {
         do {
             Text.NextCh();
         } while (Character.isDigit((char)Text.Ch));
+    }
 
 //        do {
 //            int d = Text.Ch - '0';
@@ -411,7 +398,6 @@ class Scanner {
 //            }
 //            Text.NextCh();
 //        } while (Character.isDigit((char)Text.Ch));
-    }
 
 
 
@@ -525,7 +511,6 @@ class Scanner {
                             Lex = lexEllipsis;
                         } else {
                             Lex = lexDot;
-                            NextLex();
                         }
                     } else if (Character.isDigit((char)Text.Ch)) {
                         DecNumber();

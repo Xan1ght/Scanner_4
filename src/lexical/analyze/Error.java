@@ -15,9 +15,9 @@ class Error {
             System.out.print(' ');
         }
         System.out.println("^");
-        System.out.println("(‘ва®Є  " + ELine + ") ЋиЁЎЄ : " + Msg);
+        System.out.println("Строка (" + ELine + ") Ошибка: " + Msg);
         System.out.println();
-        System.out.print("Ќ ¦¬ЁвҐ ‚‚Ћ„");
+        System.out.print("Нажмите ВВОД(Enter)");
         try {
             while (System.in.read() != '\n' );
         } catch (IOException e) {};
@@ -25,11 +25,11 @@ class Error {
     }
 
     static void Expected(String Msg) {
-        Message("Ћ¦Ё¤ Ґвбп " + Msg);
+        Message("Ожидается " + Msg);
     }
 
     static void Warning(String Msg) {
         System.out.println();
-        System.out.println("ЏаҐ¤гЇаҐ¦¤Ґ­ЁҐ: " + Msg);
+        System.out.println("Предупреждение: " + Msg);
     }
 }
