@@ -247,6 +247,8 @@ class Scanner {
                     } else {                                        // Если нет  в конце U и L, то просто в 16.
                         Lex = lexNumHex;
                     }
+                } else {
+                    System.out.println("Error");
                 }
             } else if (Character.isDigit((char)Text.Ch)) {          // (3) Если "0 с цифрой", значит число "должно быть" в 8
                 OctNumber();                                        // Просто в 8
