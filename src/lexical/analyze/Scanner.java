@@ -89,6 +89,7 @@ class Scanner {
         lexBackslash_Vertical_Tab = 168,        /* \v */
         lexBackslash_Backspace = 169,           /* \b */
         lexBackslash_Carriage_Return = 170,     /* \r */
+        lexBackslash_Escape = 174,              /* \e */
         lexBackslash_Form_Feed = 171,           /* \f */
         lexBackslash_Alert_Or_Bell = 172,       /* \a */
         lexBackslash_Backslash = 173,           /* \\ */
@@ -502,6 +503,70 @@ class Scanner {
         }
     }
 
+    private static void Character() {
+        Text.NextCh();
+
+        if (Text.Ch == '\\') {
+            Text.NextCh();
+            if (Text.Ch == 'n') {
+                Text.NextCh();
+            } else if (Text.Ch == 't') {
+                Text.NextCh();
+            } else if (Text.Ch == 'v') {
+                Text.NextCh();
+            } else if (Text.Ch == 'b') {
+                Text.NextCh();
+            } else if (Text.Ch == 'r') {
+                Text.NextCh();
+            } else if (Text.Ch == 'f') {
+                Text.NextCh();
+            } else if (Text.Ch == 'a') {
+                Text.NextCh();
+            } else if (Text.Ch == '\\') {
+                Text.NextCh();
+            } else if (Text.Ch == '?') {
+                Text.NextCh();
+            } else if (Text.Ch == '\'') {
+                Text.NextCh();
+            } else if (Text.Ch == '\"') {
+                Text.NextCh();
+            } else if (Text.Ch >= '0' && Text.Ch <= '3') {
+                Text.NextCh();
+                if (Text.Ch >= '0' && Text.Ch <= '7') {
+                    Text.NextCh();
+                    if (Text.Ch >= '0' && Text.Ch <= '7') {
+                        Text.NextCh();
+                    }
+                }
+            } else if (Text.Ch >= '4' && Text.Ch <= '7') {
+                Text.NextCh();
+                if (Text.Ch >= '0' && Text.Ch <= '7') {
+                    Text.NextCh();
+                }
+            } else if (Text.Ch == 'x') {
+                do {
+                    Text.NextCh();
+                } while (Text.Ch == '0');
+                if ((Text.Ch >= '1' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+                    Text.NextCh();
+                    if ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+                        Text.NextCh();
+                    }
+                }
+            }
+        } else if (Character.isLetterOrDigit((char)Text.Ch)) {
+            Text.NextCh();
+        } else {
+            Error.Expected("символ в ''");
+        }
+
+        if (Text.Ch != '\'') {
+            Error.Expected("символ ' перед " + (char)Text.Ch);
+        } else {
+            Text.NextCh();
+        }
+    }
+
     private static void String() {
         do {
             Text.NextCh();
@@ -775,6 +840,10 @@ class Scanner {
                     } else {
                         Lex = lexHash;
                     }
+                    break;
+                case '\'':
+                    Character();
+                    Lex = lexCharacter;
                     break;
                 case '\"':
                     String();

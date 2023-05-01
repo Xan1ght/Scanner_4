@@ -26,8 +26,11 @@ int main() {
 
     "Coool"
 
-    "Coo \f
-    c"
+    "Coo \n"
+    "c"
+
+    '\x1f'
+
 
     return 0;
 }
