@@ -134,6 +134,7 @@ public class Counter {
 
         Scanner.Add2ChainHash(Scanner.H,    "\\n",              Scanner.lexBackslash_Newline);
         Scanner.Add2ChainHash(Scanner.H,    "\\t",              Scanner.lexBackslash_Tab);
+        Scanner.Add2ChainHash(Scanner.H,    "\\e",              Scanner.lexBackslash_Escape);
         Scanner.Add2ChainHash(Scanner.H,    "\\v",              Scanner.lexBackslash_Vertical_Tab);
         Scanner.Add2ChainHash(Scanner.H,    "\\b",              Scanner.lexBackslash_Backspace);
         Scanner.Add2ChainHash(Scanner.H,    "\\r",              Scanner.lexBackslash_Carriage_Return);
