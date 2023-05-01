@@ -12,11 +12,11 @@ class Pars {
             Scanner.NextLex();
         }
 
-        System.out.println("\n\nКомпиляция задачи А завершена.\n");
+        System.out.println("\n\nКомпиляция задачи А завершена.");
 
         Counter.InfoAllLex();
 
-        System.out.println("\nКомпиляция других подзадач завершена.\n");
+        System.out.println("\nКомпиляция других подзадач завершена.");
 
         Counter.InfoLex();
     }
