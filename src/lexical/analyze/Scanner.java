@@ -11,7 +11,8 @@ package lexical.analyze;
 class Scanner {
 
     static int NAMELEN = 140;   // Наибольшая длина имени (пока хз)
-    static int N = 175;         // Объем таблицы, где 70% заполняется (пока хз)
+    static int N = 130;         // Объем таблицы, где 70% заполняется (пока хз)
+    static int NMAX = 180;      // Количество всех лексем
 
     final static int
         lexNone = 0,
@@ -80,15 +81,31 @@ class Scanner {
         lexOpen_Brace = 159,    /* { */             lexClose_Brace = 160,   /* } */
         lexOpen_Bracket = 161,  /* [ */             lexClose_Bracket = 162, /* ] */
 
+        lexCharacter = 164,
+        lexString = 165,
 
+        lexBackslash_Newline = 166,             /* \n */
+        lexBackslash_Tab = 167,                 /* \t */
+        lexBackslash_Vertical_Tab = 168,        /* \v */
+        lexBackslash_Backspace = 169,           /* \b */
+        lexBackslash_Carriage_Return = 170,     /* \r */
+        lexBackslash_Form_Feed = 171,           /* \f */
+        lexBackslash_Alert_Or_Bell = 172,       /* \a */
+        lexBackslash_Backslash = 173,           /* \\ */
+        lexBackslash_Question_Mark = 174,       /* \? */
+        lexBackslash_Single_Quote =175,         /* \' */
+        lexBackslash_Double_Quote = 176,        /* \" */
+        lexBackslash_Octal_Value = 177,         /* \ooo */
+        lexBackslash_Hexadecimal_Value = 178,   /* \hhh */
+        lexBackslash_Null_Character = 179,      /* \0 */
 
-        lexEOT = 170;           /* /0 */
+        lexEOT = 180;               /* \0 */
 
 
     //
     static int Lex;
     //
-    private static StringBuffer Buf = new StringBuffer(NAMELEN);
+    private static final StringBuffer Buf = new StringBuffer(NAMELEN);
     static String Name;
 
     //
@@ -473,12 +490,33 @@ class Scanner {
         if (Text.Ch == Text.chEOT) {
             Location.LexPos = Location.Pos;
             Error.Message("Не закончен комментарий");
+        } else {
+            Text.NextCh();
         }
     }
 
 
     private static void Comment() {
         while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
+            Text.NextCh();
+        }
+    }
+
+    private static void String() {
+        do {
+            Text.NextCh();
+        } while (Text.Ch != '\"' && Text.Ch != '\\' && Text.Ch != Text.chEOL && Text.Ch != Text.chEOT);
+
+        if (Text.Ch == Text.chEOL || Text.Ch == Text.chEOT) {
+            Error.Message("Не закончена строка");
+        } else if (Text.Ch == '\\') {
+            Text.NextCh();
+            if (Text.Ch == Text.chEOT) {
+                Error.Message("Не закончена строка");
+            } else {
+                String();
+            }
+        } else {
             Text.NextCh();
         }
     }
@@ -736,6 +774,56 @@ class Scanner {
                         Lex = lexHash_Hash;
                     } else {
                         Lex = lexHash;
+                    }
+                    break;
+                case '\"':
+                    String();
+                    Lex = lexString;
+                    break;
+                case '\\':
+                    Text.NextCh();
+                    if (Text.Ch == 'n') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Newline;
+                    } else if (Text.Ch == 't') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Tab;
+                    } else if (Text.Ch == 'v') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Vertical_Tab;
+                    } else if (Text.Ch == 'b') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Backspace;
+                    } else if (Text.Ch == 'r') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Carriage_Return;
+                    } else if (Text.Ch == 'f') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Form_Feed;
+                    } else if (Text.Ch == 'a') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Alert_Or_Bell;
+                    } else if (Text.Ch == '\\') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Backslash;
+                    } else if (Text.Ch == '?') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Question_Mark;
+                    } else if (Text.Ch == '\'') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Single_Quote;
+                    } else if (Text.Ch == '\"') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Double_Quote;
+//                    } else if (Text.Ch == '?') {
+//
+//                    } else if (Text.Ch == '?') {
+
+                    } else if (Text.Ch == '0') {
+                        Text.NextCh();
+                        Lex = lexBackslash_Null_Character;
+                    } else {
+                        Error.Expected("буква/цифра/символ для \\");
                     }
                     break;
                 case Text.chEOT:

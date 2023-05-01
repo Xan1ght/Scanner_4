@@ -2,7 +2,7 @@ package lexical.analyze;
 
 public class Counter {
     static int score;
-    static int[] scoreLex = new int[Scanner.N];
+    static int[] scoreLex = new int[Scanner.NMAX];
 
     static void Add() {
         if (Scanner.Lex == Scanner.lexEllipsis) {
@@ -126,6 +126,26 @@ public class Counter {
 
         Scanner.Add2ChainHash(Scanner.H,    "[",                Scanner.lexOpen_Bracket);
         Scanner.Add2ChainHash(Scanner.H,    "]",                Scanner.lexClose_Bracket);
+
+
+        Scanner.Add2ChainHash(Scanner.H,    "Строка",                Scanner.lexString);
+        Scanner.Add2ChainHash(Scanner.H,    "Символ",                Scanner.lexCharacter);
+
+
+        Scanner.Add2ChainHash(Scanner.H,    "\\n",              Scanner.lexBackslash_Newline);
+        Scanner.Add2ChainHash(Scanner.H,    "\\t",              Scanner.lexBackslash_Tab);
+        Scanner.Add2ChainHash(Scanner.H,    "\\v",              Scanner.lexBackslash_Vertical_Tab);
+        Scanner.Add2ChainHash(Scanner.H,    "\\b",              Scanner.lexBackslash_Backspace);
+        Scanner.Add2ChainHash(Scanner.H,    "\\r",              Scanner.lexBackslash_Carriage_Return);
+        Scanner.Add2ChainHash(Scanner.H,    "\\f",              Scanner.lexBackslash_Form_Feed);
+        Scanner.Add2ChainHash(Scanner.H,    "\\a",              Scanner.lexBackslash_Alert_Or_Bell);
+        Scanner.Add2ChainHash(Scanner.H,    "\\\\",             Scanner.lexBackslash_Backslash);
+        Scanner.Add2ChainHash(Scanner.H,    "\\?",              Scanner.lexBackslash_Question_Mark);
+        Scanner.Add2ChainHash(Scanner.H,    "\\'",              Scanner.lexBackslash_Single_Quote);
+        Scanner.Add2ChainHash(Scanner.H,    "\\\"",             Scanner.lexBackslash_Double_Quote);
+        Scanner.Add2ChainHash(Scanner.H,    "\\ooo",            Scanner.lexBackslash_Octal_Value);
+        Scanner.Add2ChainHash(Scanner.H,    "\\hhh",            Scanner.lexBackslash_Hexadecimal_Value);
+        Scanner.Add2ChainHash(Scanner.H,    "\\0",              Scanner.lexBackslash_Null_Character);
     }
 
     public static void insertionSort(String[] name, int[] data, int length) {
@@ -147,8 +167,8 @@ public class Counter {
 
     static void InfoLex() {
         int j = 0;
-        String[] nameLex = new String[Scanner.N];
-        int[] dataLex = new int[Scanner.N];
+        String[] nameLex = new String[Scanner.NMAX];
+        int[] dataLex = new int[Scanner.NMAX];
 
         AllLexAdd2ChainHash();
 
