@@ -10,7 +10,7 @@ class Text {
     static final char chEOT   = '\0';   //
 
     static boolean Ok = false;
-    static String Message = "” ©« ­Ґ ®вЄалв";
+    static String Message = "Ошибка при чтении файла";
     static int Ch = chEOT;
 
     private static InputStream f;
@@ -38,10 +38,10 @@ class Text {
     }
 
     static void Reset() {
-        if (Location.Path == null) {
-            System.out.println("Формат вызова:\n   <Входной файл>.txt");
-            System.exit(1);
-        } else {
+//        if (Location.Path == null) {
+//            System.out.println("Формат вызова:\n   <Входной файл>.txt");
+//            System.exit(1);
+//        } else {
             try {
                 f = new FileInputStream(Location.Path);
                 Ok = true;
@@ -53,14 +53,13 @@ class Text {
                 Ok = false;
                 Message = "Входной файл не найден";
             }
-        }
+//        }
     }
+
 
     static void Close() {
         try {
             f.close();
         } catch (IOException e) {};
     }
-
-
 }
