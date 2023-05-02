@@ -1,0 +1,31 @@
+Option1
+"Cool \
+!"
+
+Option2
+"Cool" " - Yes!"
+
+Option3
+"Cool"
+        "Cool"
+                "Cool"
+"Cool"
+"Cool"
+"Cool"
+
+Option4
+
+// 1
+"Cool \
+!"
+
+// 2
+"Cool" " - Yes!"
+
+// 3
+"Cool"
+        "Cool"
+                "Cool"
+"Cool"
+"Cool"
+"Cool"

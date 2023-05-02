@@ -207,12 +207,33 @@ class Scanner {
             } else {
                 Error.Message("Слишком длинное имя");
             }
+
             Text.NextCh();
+
+            if (Text.Ch == '_') {
+                if (i++ < NAMELEN) {
+                    Buf.append((char) Text.Ch);
+                } else {
+                    Error.Message("Слишком длинное имя");
+                }
+                Text.NextCh();
+                if (Text.Ch == '_') {
+                    if (i++ < NAMELEN) {
+                        Buf.append((char) Text.Ch);
+                    } else {
+                        Error.Message("Слишком длинное имя");
+                    }
+                    Error.Warning("Двойное подчеркивание в идентификаторах зарезервировано в С++");
+                    Text.NextCh();
+                }
+            }
         } while (Character.isLetterOrDigit((char)Text.Ch));
+
 
         Name = Buf.toString();
         Lex = TestKW(); //
     }
+
 
     // Идентификатор-Число
     private static void Number() {
@@ -845,8 +866,13 @@ class Scanner {
                     Lex = lexCharacter;
                     break;
                 case '\"':
-                    String();
-                    Lex = lexString;
+                    if (Lex == lexString) {
+                        String();
+                        NextLex();
+                    } else {
+                        String();
+                        Lex = lexString;
+                    }
                     break;
                 case '\\':
                     Text.NextCh();
@@ -886,15 +912,56 @@ class Scanner {
                     } else if (Text.Ch == '\"') {
                         Text.NextCh();
                         Lex = lexBackslash_Double_Quote;
-//                    } else if (Text.Ch == '?') {
-//
-//                    } else if (Text.Ch == '?') {
-
                     } else if (Text.Ch == '0') {
                         Text.NextCh();
-                        Lex = lexBackslash_Null_Character;
+                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+                            Text.NextCh();
+                            if (Text.Ch >= '0' && Text.Ch <= '7') {
+                                Text.NextCh();
+                            }
+                            Lex = lexBackslash_Octal_Value;
+                        } else {
+                            Lex = lexBackslash_Null_Character;
+                        }
+                    } else if (Text.Ch >= '1' && Text.Ch <= '3') {
+                        Text.NextCh();
+                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+                            Text.NextCh();
+                            if (Text.Ch >= '0' && Text.Ch <= '7') {
+                                Text.NextCh();
+                            }
+                        }
+                        Lex = lexBackslash_Octal_Value;
+                    } else if (Text.Ch >= '4' && Text.Ch <= '7') {
+                        Text.NextCh();
+                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+                            Text.NextCh();
+                        }
+                        Lex = lexBackslash_Octal_Value;
+                    } else if (Text.Ch == 'x') {
+                        do {
+                            Text.NextCh();
+                        } while (Text.Ch == '0');
+                        if ((Text.Ch >= '1' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+                            Text.NextCh();
+                            if ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+                                Text.NextCh();
+                            }
+                        }
+                        Lex = lexBackslash_Hexadecimal_Value;
                     } else {
                         Error.Expected("буква/цифра/символ для \\");
+                    }
+                    break;
+                case '_':
+                    Text.NextCh();
+                    if (Character.isLetterOrDigit((char)Text.Ch)) {
+                        Error.Warning("Не следует использовать идентификаторы, начинающиеся с одного символа подчеркивания в С++");
+                        Ident();
+                        Name = "_" + Name;
+                        Lex = TestKW();
+                    } else {
+                        Error.Expected("цифра или буква");
                     }
                     break;
                 case Text.chEOT:

@@ -39,7 +39,7 @@ class Text {
 
     static void Reset() {
         if (Location.Path == null) {
-            System.out.println("”®а¬ в ўл§®ў :\n   O <ўе®¤­®© д ©«>");
+            System.out.println("Формат вызова:\n   <Входной файл>.txt");
             System.exit(1);
         } else {
             try {
@@ -51,7 +51,7 @@ class Text {
                 NextCh();
             } catch (IOException e) {
                 Ok = false;
-                Message = "‚е®¤­®© д ©« ­Ґ ­ ©¤Ґ­";
+                Message = "Входной файл не найден";
             }
         }
     }
@@ -61,4 +61,6 @@ class Text {
             f.close();
         } catch (IOException e) {};
     }
+
+
 }

@@ -10,27 +10,29 @@ int main() {
     // заполнение массива случайными числами
     for (int i = 0ul; i < SIZE; i++) {
         arr[i] = rand() % 100;
-        std::cout << arr[i] /* << " " */;
+        std::cout << arr[i] << " ";
     }
 
     // нахождение среднего значения
     int sum = 0;
-    for (int i = 0; i < SIZE; i++) {
+    for (int i = 0x0; i < SIZE; i++) {
         sum += arr[i];
     }
-    float average = static cast<float>(sum) / SIZE;
-    std::cout /* << "\nAverage: " */ << average << std::endl;
-
-    \n
-    \t
-
-    "Coool"
-
-    "Coo \n"
-    "c"
-
-    '\x1f'
-
+    float average = static_cast<float>(sum) / SIZE;
+    std::cout  << "Average: " << average << std::endl;
 
     return 0;
 }
+"FA"
+
+/*
+    \n
+    \t
+    \377
+
+    "Cool, \
+    da"
+
+    '\x1f'
+
+*/

@@ -175,7 +175,6 @@ public class Counter {
 
         for (int i = 0; i < Scanner.N; i++) {
             Scanner.Item p = Scanner.H[i].items;
-//            System.out.println(i + " " + scoreLex[i]);
             while (p != null) {
                 if (scoreLex[p.data] != 0 && j < Scanner.N) {
                     nameLex[j] = p.key;
@@ -190,7 +189,7 @@ public class Counter {
 
         System.out.println("Количество лексем по отдельности: ");
         for (int i = 0; i < j; i++) {
-            System.out.println(nameLex[i] + (" ").repeat(40 - nameLex[i].length()) + "<< " + scoreLex[dataLex[i]]);
+            System.out.println(nameLex[i] + (" ").repeat(40-nameLex[i].length()) + "<< " + scoreLex[dataLex[i]]);
         }
     }
 }
