@@ -31,13 +31,13 @@ public class CPlusPlus {
         } else {
             Location.Path = args[0];
         }
-
-        if (Location.Path.length() == 5 && Location.Path.toLowerCase().endsWith("*.txt")) {
+        // Location.Path.toLowerCase().endsWith("*.txt")
+        if (Location.Path.length() >= 3 && Location.Path.charAt(0) == '*') {
 
             String currentDirectory = System.getProperty("user.dir");
             Path dir = Paths.get(currentDirectory);
 
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*.txt")) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*" + Location.Path.substring(Location.Path.lastIndexOf('.') + Location.Path.lastIndexOf(Location.Path)))) {
                 for (Path file : stream) {
                     Location.Path = file.toString();
 
@@ -48,7 +48,7 @@ public class CPlusPlus {
                     Pars.Compile();         // Компиляция данного файла
                     Done();                 // Завершение работы данного файла
 
-                    System.out.println("\033[33m" +("=").repeat(100) + "\033[0m");
+                    System.out.println("\n\033[33m" +("=").repeat(100) + "\033[0m");
                 }
 
                 Pars.CompileA();            // Компиляция задачи А
@@ -57,7 +57,7 @@ public class CPlusPlus {
                 System.err.println(e);
                 System.exit(1);
             }
-        } else if (Location.Path.length() >= 5 && Location.Path.toLowerCase().endsWith(".txt")) {
+        } else if (Location.Path.length() >= 3) {
             System.out.println("\n\n\n" + "Название файла: " + Location.Path);
             System.out.println("\033[33m" +("=").repeat(100) + "\033[0m");
 
@@ -65,12 +65,12 @@ public class CPlusPlus {
             Pars.Compile();     // Компиляция файла
             Done();             // Завершение работы
 
-            System.out.println("\033[33m" +("=").repeat(100) + "\033[0m");
+            System.out.println("\n\033[33m" +("=").repeat(100) + "\033[0m");
 
             Pars.CompileA();    // Компиляция задачи А
 
         } else {
-            System.out.println("Формат вызова:\n   <Входной файл>.txt");
+            System.out.println("Формат вызова:\n   <Входной файл>.<Формат файла>");
             System.exit(1);
         }
     }
