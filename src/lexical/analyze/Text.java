@@ -1,13 +1,14 @@
 package lexical.analyze;
 import java.io.*;
 
+// Драйвер исходного текста
 class Text {
 
-    static final int  TABSIZE = 3;      //
-    static final char chSPACE = ' ';    //
-    static final char chTAB   = '\t';   //
-    static final char chEOL   = '\n';   //
-    static final char chEOT   = '\0';   //
+    static final int  TABSIZE = 3;      // Размер табуляции
+    static final char chSPACE = ' ';    // Пробел
+    static final char chTAB   = '\t';   // Табуляция
+    static final char chEOL   = '\n';   // Конец строки
+    static final char chEOT   = '\0';   // Конец текста
 
     static boolean Ok = false;
     static String Message = "Ошибка при чтении файла";
@@ -37,23 +38,19 @@ class Text {
         } catch (IOException e) {};
     }
 
+
     static void Reset() {
-//        if (Location.Path == null) {
-//            System.out.println("Формат вызова:\n   <Входной файл>.txt");
-//            System.exit(1);
-//        } else {
-            try {
-                f = new FileInputStream(Location.Path);
-                Ok = true;
-                Message = "Ok";
-                Location.Pos = 0;
-                Location.Line = 1;
-                NextCh();
-            } catch (IOException e) {
-                Ok = false;
-                Message = "Входной файл не найден";
-            }
-//        }
+        try {
+            f = new FileInputStream(Location.Path);
+            Ok = true;
+            Message = "Ok";
+            Location.Pos = 0;
+            Location.Line = 1;
+            NextCh();
+        } catch (IOException e) {
+            Ok = false;
+            Message = "Входной файл не найден";
+        }
     }
 
 

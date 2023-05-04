@@ -2,6 +2,7 @@ package lexical.analyze;
 
 import java.io.*;
 
+// Обработка ошибок
 class Error {
     static void Message(String Msg) {
         int ELine = Location.Line;

@@ -7,11 +7,11 @@ package lexical.analyze;
     Анализируемый язык: Си++
 */
 
-//
+// Лексический анализатор
 class Scanner {
 
-    static int NAMELEN = 140;   // Наибольшая длина имени (пока хз)
-    static int N = 130;         // Объем таблицы, где 70% заполняется (пока хз)
+    static int NAMELEN = 31;    // Наибольшая длина имени
+    static int N = 130;         // Объем таблицы, где 70% заполняется
     static int NMAX = 180;      // Количество всех лексем
 
     final static int
@@ -102,20 +102,16 @@ class Scanner {
         lexEOT = 180;               /* \0 */
 
 
-    //
+    // Текущая лексема
     static int Lex;
-    //
+    // Строковое значение имени
     private static final StringBuffer Buf = new StringBuffer(NAMELEN);
     static String Name;
 
-    //
+    // Значение числовых литералов
     static int Num;
 
-    private static int KWNUM = 34;
-    private static int nkw = 0;
-
-
-
+    // Класс для хэш-таблицы
     static public class Item {
         String key;
         int data;
@@ -130,14 +126,17 @@ class Scanner {
         }
     }
 
+    // Клас хэш-таблица
     static public class tChainHash {
         Item items;
     }
 
-    // private static Item[] KWTable = new Item[KWNUM];
+    // Создание хэш-таблицы
     public static tChainHash[] H = new tChainHash[N];
 
 
+
+    // Проверка лексемы на ключевое слово
     private static int TestKW() {
         Item p = Search(H, Name);
 
@@ -149,6 +148,7 @@ class Scanner {
     }
 
 
+    // Иниацилизация хэщ-таблицы
     private static void InitChainHash() {
         for (int i = 0; i < N; i++) {
             H[i] = new tChainHash();
@@ -169,6 +169,7 @@ class Scanner {
     }
 
 
+    // Добавление ключевого слова в хэш-таблицу
     public static void Add2ChainHash(tChainHash[] T, String K, int D) {
         int h = ChainHash(K);
         Item p = T[h].items;
@@ -197,6 +198,7 @@ class Scanner {
     }
 
 
+    // Нахождение идентификатора(имени/ключевого слова)
     private static void Ident() {
         int i = 0;
         Buf.setLength(0);
@@ -230,12 +232,12 @@ class Scanner {
         } while (Character.isLetterOrDigit((char)Text.Ch));
 
 
-        Name = Buf.toString();
-        Lex = TestKW(); //
+        Name = Buf.toString();  // Полученное слово из строки
+        Lex = TestKW();         // Проверка на ключевое слово
     }
 
 
-    // Идентификатор-Число
+    // Нахождение числа (бинарное, восьмеричное, десятичное, шестнадцатеричное и все суффиксы)
     private static void Number() {
         Lex = lexNum;
         Num = 0;
@@ -412,42 +414,37 @@ class Scanner {
         }
     }
 
+
+    // Бинарное число
     private static void BinNumber() {
         do {
             Text.NextCh();
         } while (Text.Ch == '0' || Text.Ch == '1');
     }
 
+    // Восьмеричное число
     private static void OctNumber() {
         do {
             Text.NextCh();
         } while (Text.Ch >= '0' && Text.Ch <= '7');
     }
 
+    // Шестнадцатеричное число
     private static void HexNumber() {
         do {
             Text.NextCh();
         } while ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f'));
     }
 
+    // Десятичное число
     private static void DecNumber() {
         do {
             Text.NextCh();
         } while (Character.isDigit((char)Text.Ch));
     }
 
-//        do {
-//            int d = Text.Ch - '0';
-//            if ((Integer.MAX_VALUE - d)/10 >= Num) {
-//                Num = 10 * Num + d;
-//            } else {
-//                Error.Message("Слишком большое число");
-//            }
-//            Text.NextCh();
-//        } while (Character.isDigit((char)Text.Ch));
 
-
-
+    // Поиск суффикса Е
     private static boolean SearchSuffixE() {
         if (Text.Ch == 'E' || Text.Ch == 'e') {
             Text.NextCh();
@@ -467,7 +464,7 @@ class Scanner {
         }
     }
 
-
+    // Поиск суффикса F
     private static boolean SearchSuffixF() {
         if (Text.Ch == 'F' || Text.Ch == 'f') {
             Text.NextCh();
@@ -477,6 +474,7 @@ class Scanner {
         }
     }
 
+    // Поиск суффикса U
     private static boolean SearchSuffixU() {
         if (Text.Ch == 'U' || Text.Ch == 'u') {
             Text.NextCh();
@@ -486,6 +484,7 @@ class Scanner {
         }
     }
 
+    // Поиск суффикса L
     private static boolean SearchSuffixL() {
         if (Text.Ch == 'L' || Text.Ch == 'l') {
             Text.NextCh();
@@ -496,6 +495,7 @@ class Scanner {
     }
 
 
+    // Комментарий со звездочкой
     private static void CommentStar() {
         Text.NextCh();
 
@@ -516,13 +516,14 @@ class Scanner {
         }
     }
 
-
+    // Комментарий
     private static void Comment() {
         while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
             Text.NextCh();
         }
     }
 
+    // Нахождение символа (не более 2 байта)
     private static void Character() {
         Text.NextCh();
 
@@ -587,6 +588,8 @@ class Scanner {
         }
     }
 
+
+    // Нахождение строки
     private static void String() {
         do {
             Text.NextCh();
@@ -607,6 +610,7 @@ class Scanner {
     }
 
 
+    // Следующая лексема
     static void NextLex() {
         while (Text.Ch == Text.chSPACE || Text.Ch == Text.chTAB || Text.Ch == Text.chEOL) {
             Text.NextCh();
@@ -974,6 +978,7 @@ class Scanner {
     }
 
 
+    // Инициализация сканнера
     static void Init() {
         InitChainHash();
 
@@ -1078,114 +1083,5 @@ class Scanner {
 
         Add2ChainHash(H,    "wchar_t",             lexWchar_t);
         Add2ChainHash(H,    "while",               lexWhile);
-
-
-//        Add2ChainHash(H,    "Имя",                                  lexName);
-//
-//        Add2ChainHash(H,    "Число",                                lexNum);
-//        Add2ChainHash(H,    "Число (полож.)",                       lexNumU);
-//        Add2ChainHash(H,    "Число (полож. + диапозон)",            lexNumUL);
-//        Add2ChainHash(H,    "Число (полож. + 2х диапозон)",         lexNumULL);
-//        Add2ChainHash(H,    "Число (+ диапозон)",                   lexNumL);
-//        Add2ChainHash(H,    "Число (+ 2x диапозон)",                lexNumLL);
-//
-//        Add2ChainHash(H,    "Число (bin-е)",                        lexNumBin);
-//        Add2ChainHash(H,    "Число (bin-е полож.)",                 lexNumBinU);
-//        Add2ChainHash(H,    "Число (bin-е полож. + диапозон)",      lexNumBinUL);
-//        Add2ChainHash(H,    "Число (bin-е полож. + 2х диапозон)",   lexNumBinULL);
-//        Add2ChainHash(H,    "Число (bin-е + диапозон)",             lexNumBinL);
-//        Add2ChainHash(H,    "Число (bin-е + 2x диапозон)",          lexNumBinLL);
-//
-//        Add2ChainHash(H,    "Число (8-е)",                          lexNumOct);
-//        Add2ChainHash(H,    "Число (8-е полож.)",                   lexNumOctU);
-//        Add2ChainHash(H,    "Число (8-е полож. + диапозон)",        lexNumOctUL);
-//        Add2ChainHash(H,    "Число (8-е полож. + 2х диапозон)",     lexNumOctULL);
-//        Add2ChainHash(H,    "Число (8-е + диапозон)",               lexNumOctL);
-//        Add2ChainHash(H,    "Число (8-е + 2x диапозон)",            lexNumOctLL);
-//
-//        Add2ChainHash(H,    "Число (16-е)",                         lexNumHex);
-//        Add2ChainHash(H,    "Число (16-е полож.)",                  lexNumHexU);
-//        Add2ChainHash(H,    "Число (16-е полож. + диапозон)",       lexNumHexUL);
-//        Add2ChainHash(H,    "Число (16-е полож. + 2х диапозон)",    lexNumHexULL);
-//        Add2ChainHash(H,    "Число (16-е + диапозон)",              lexNumHexL);
-//        Add2ChainHash(H,    "Число (16-е + 2x диапозон)",           lexNumHexLL);
-//
-//        Add2ChainHash(H,    "Число (двойная)",                      lexNumDouble);
-//        Add2ChainHash(H,    "Число (двойная + диапозон)",           lexNumDoubleL);
-//        Add2ChainHash(H,    "Число (одинарная)",                    lexNumFloat);
-//
-//
-//        Add2ChainHash(H,    "+",                lexPlus);
-//        Add2ChainHash(H,    "++",               lexPlus_Plus);
-//        Add2ChainHash(H,    "+=",               lexPlus_Eq);
-//
-//        Add2ChainHash(H,    "-",                lexMinus);
-//        Add2ChainHash(H,    "--",               lexMinus_Minus);
-//        Add2ChainHash(H,    "-=",               lexMinus_Eq);
-//
-//        Add2ChainHash(H,    "*",                lexStar);
-//        Add2ChainHash(H,    "*=",               lexStar_Eq);
-//
-//        Add2ChainHash(H,    "/",                lexSlash);
-//        Add2ChainHash(H,    "/=",               lexSlash_Eq);
-//
-//        Add2ChainHash(H,    "/",                lexModulo);
-//        Add2ChainHash(H,    "/=",               lexModulo_Eq);
-//
-//        Add2ChainHash(H,    "^",                lexCaret);
-//        Add2ChainHash(H,    "^=",               lexCaret_Eq);
-//
-//        Add2ChainHash(H,    "&",                lexAmpersand);
-//        Add2ChainHash(H,    "&&",               lexLogical_And);
-//        Add2ChainHash(H,    "&=",               lexAmpersand_Eq);
-//
-//        Add2ChainHash(H,    "|",                lexPipe);
-//        Add2ChainHash(H,    "||",               lexLogical_Or);
-//        Add2ChainHash(H,    "|=",               lexPipe_Eq);
-//
-//        Add2ChainHash(H,    "?",                lexQuestion_Mark);
-//        Add2ChainHash(H,    "!",                lexExclaim);
-//        Add2ChainHash(H,    "!=",               lexNot_Eq);
-//
-//        Add2ChainHash(H,    "=",                lexAssign);
-//        Add2ChainHash(H,    "==",               lexEqual);
-//
-//        Add2ChainHash(H,    ":",                lexColon);
-//        Add2ChainHash(H,    "::",               lexDouble_Colon);
-//        Add2ChainHash(H,    ";",                lexSemicolon);
-//
-//        Add2ChainHash(H,    ".",                lexDot);
-//        Add2ChainHash(H,    ".*",               lexDot_Star);
-//        Add2ChainHash(H,    "...",              lexEllipsis);
-//        Add2ChainHash(H,    ",",                lexComma);
-//
-//        Add2ChainHash(H,    "<",                lexLess);
-//        Add2ChainHash(H,    "<<",               lexShift_Left);
-//        Add2ChainHash(H,    "<=",               lexLess_Eq);
-//        Add2ChainHash(H,    "<<=",              lexShift_Left_Eq);
-//
-//        Add2ChainHash(H,    ">",                lexGreater);
-//        Add2ChainHash(H,    ">>",               lexShift_Right);
-//        Add2ChainHash(H,    ">=",               lexGreater_Eq);
-//        Add2ChainHash(H,    ">>=",              lexShift_Right_Eq);
-//
-//        Add2ChainHash(H,    "->",               lexArrow);
-//        Add2ChainHash(H,    "->*",              lexArrow_Star);
-//
-//        Add2ChainHash(H,    "#",                lexHash);
-//        Add2ChainHash(H,    "##",               lexHash_Hash);
-//
-//        Add2ChainHash(H,    "~",                lexTilde);
-//
-//        Add2ChainHash(H,    "(",                lexOpen_Paren);
-//        Add2ChainHash(H,    ")",                lexClose_Paren);
-//
-//        Add2ChainHash(H,    "{",                lexOpen_Brace);
-//        Add2ChainHash(H,    "}",                lexClose_Brace);
-//
-//        Add2ChainHash(H,    "[",                lexOpen_Bracket);
-//        Add2ChainHash(H,    "]",                lexClose_Bracket);
-
-
     }
 }

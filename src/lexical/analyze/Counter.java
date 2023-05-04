@@ -1,11 +1,13 @@
 package lexical.analyze;
 
+// Счетчик
 public class Counter {
     static int score;
     static int[] scoreLex = new int[Scanner.NMAX];
 
+    // Добавление лексемы в счетчик
     static void Add() {
-        if (Scanner.Lex == Scanner.lexEllipsis) {
+        if (Scanner.Lex == Scanner.lexEllipsis) {           // Частный случай лексемы: ...
             score--;
             scoreLex[Scanner.lexDot]--;
         }
@@ -14,12 +16,13 @@ public class Counter {
         scoreLex[Scanner.Lex]++;
     }
 
+    // Вывод общего количества лексем
     static void InfoAllLex() {
         System.out.println("Общее количество лексем: " + score + ".");
     }
 
 
-
+    // Добавление лексем помимо ключевых слов для вывода счетчика отдельных лексем
     static void AllLexAdd2ChainHash() {
         Scanner.Add2ChainHash(Scanner.H,    "Имя",                                  Scanner.lexName);
 
@@ -149,6 +152,7 @@ public class Counter {
         Scanner.Add2ChainHash(Scanner.H,    "\\0",              Scanner.lexBackslash_Null_Character);
     }
 
+    // Сортировка вставками, чтобы +\- по алфавиту и красоте смотрелось
     public static void insertionSort(String[] name, int[] data, int length) {
         for (int i = 0; i < length; i++) {
             int j = i - 1;
@@ -165,7 +169,7 @@ public class Counter {
     }
 
 
-
+    // Вывод количества отдельных лексем, для нормальной проверки с общей
     static void InfoLex() {
         int j = 0;
         String[] nameLex = new String[Scanner.NMAX];

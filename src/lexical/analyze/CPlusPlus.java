@@ -31,13 +31,20 @@ public class CPlusPlus {
         } else {
             Location.Path = args[0];
         }
-        // Location.Path.toLowerCase().endsWith("*.txt")
-        if (Location.Path.length() >= 3 && Location.Path.charAt(0) == '*') {
 
+        if (Location.Path == null || (Location.Path.length() < 3 &&
+                Location.Path.indexOf('.') == Location.Path.lastIndexOf('.') &&
+                Location.Path.substring('.' + 1).isEmpty() &&
+                Location.Path.charAt(0) != '.')) {
+            System.out.println("\nФормат вызова:\n   <Входной файл>.<Формат файла>");
+            System.exit(1);
+        } else if (Location.Path.length() >= 3 && Location.Path.charAt(0) == '*') {
             String currentDirectory = System.getProperty("user.dir");
             Path dir = Paths.get(currentDirectory);
 
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*" + Location.Path.substring(Location.Path.lastIndexOf('.') + Location.Path.lastIndexOf(Location.Path)))) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*" +
+                    Location.Path.substring(Location.Path.lastIndexOf('.') +
+                    Location.Path.lastIndexOf(Location.Path)))) {
                 for (Path file : stream) {
                     Location.Path = file.toString();
 
@@ -69,9 +76,6 @@ public class CPlusPlus {
 
             Pars.CompileA();    // Компиляция задачи А
 
-        } else {
-            System.out.println("Формат вызова:\n   <Входной файл>.<Формат файла>");
-            System.exit(1);
         }
     }
 }
