@@ -10,9 +10,9 @@ package lexical.analyze;
 // Лексический анализатор
 class Scanner {
 
-    static int NAMELEN = 31;    // Наибольшая длина имени
-    static int N = 130;         // Объем таблицы, где 70% заполняется
-    static int NMAX = 180;      // Количество всех лексем
+    static int NAMELEN = 100;    // Наибольшая длина имени
+    static int N = 127;         // Объем таблицы, где 70% заполняется
+    static int NMAX = 182;      // Количество всех лексем
 
     final static int
         lexNone = 0,
@@ -20,86 +20,91 @@ class Scanner {
         lexCharacter = 2,
         lexString = 3,
 
-        lexNum = 4,             /* число-в10 */     lexNumOct = 16,         /* ч-в8 */      lexNumHex = 22,             /* ч-в16 */
-        lexNumU = 5,            /* ч-в10-U */       lexNumOctU = 17,        /* ч-в8-U */    lexNumHexU = 23,            /* ч-в16-U */
-        lexNumUL = 6,           /* ч-в10-UL */      lexNumOctUL = 18,       /* ч-в8-UL */   lexNumHexUL = 24,           /* ч-в16-UL */
-        lexNumULL = 7,          /* ч-в10-ULL */     lexNumOctULL = 19,      /* ч-в8-ULL */  lexNumHexULL = 25,          /* ч-в16-ULL */
-        lexNumL = 8,            /* ч-в10-L */       lexNumOctL = 20,        /* ч-в8-L */    lexNumHexL = 26,            /* ч-в16-L */
-        lexNumLL = 9,           /* ч-в10-LL */      lexNumOctLL = 21,       /* ч-в8-LL */   lexNumHexLL = 27,           /* ч-в16-LL */
-        lexNumBin = 10,         /* ч-вbin */        lexNumBinL = 14,        /* ч-вbin-L */  lexNumBinLL = 15,           /* ч-вbin-LL */
-        lexNumBinU = 11,        /* ч-вbin-U */      lexNumBinUL = 12,       /* ч-вbin-UL */ lexNumBinULL = 13,          /* ч-вbin-ULL */
-        lexNumFloat = 28,       /* ч-float */       lexNumDouble = 29,      /* ч-double */  lexNumDoubleL = 30,         /* ч-double-L */
+        lexNumInt = 4,
 
-        lexAlignas = 31,        /* alignas */       lexAlignof = 32,        /* alignof */   lexAnd = 33,                /* and */
-        lexAnd_Eq = 34,         /* and_eq */        lexAsm = 35,            /* asm */       lexAuto = 36,               /* auto */
-        lexBitand = 37,         /* bitand */        lexBitor = 38,          /* bitor */     lexBool = 39,               /* bool */
-        lexBreak = 40,          /* break */         lexCase = 41,           /* case */      lexCatch = 42,              /* catch */
-        lexChar = 43,           /* char */          lexChar16_t = 44,       /* char16_t */  lexChar32_t = 45,           /* char32_t */
-        lexClass = 46,          /* class */         lexComlp = 47,          /* comlp */     lexConst = 48,              /* const */
-        lexConst_cast = 49,     /* const_cast */    lexConstexpr = 50,      /* constexpr */ lexContinue = 51,           /* continue */
-        lexDecltype = 52,       /* decltype */      lexDefault = 53,        /* default */   lexDelete = 54,             /* delete */
-        lexDo = 55,             /* do */            lexDouble = 56,         /* double */    lexDynamic_cast = 57,       /* dynamic_cast */
-        lexElse = 58,           /* else */          lexEnum = 59,           /* enum */      lexExplicit = 60,           /* explicit */
-        lexExtern = 61,         /* extern */        lexFalse = 62,          /* false */     lexFinal = 63,              /* final */
-        lexFloat = 64,          /* float */         lexFriend = 65,         /* friend */    lexFor = 66,                /* for */
-        lexGoto = 67,           /* goto */          lexIf = 68,             /* if */        lexInline = 69,             /* inline */
-        lexInt = 70,            /* int */           lexLong = 71,           /* long */      lexMutable = 72,            /* mutable */
-        lexNamespace = 73,      /* namespace */     lexNew = 74,            /* new */       lexNoexcept = 75,           /* noexcept */
-        lexNot = 76,            /* not */           lexNot_eq = 77,         /* not_eq */    lexNullptr = 78,            /* nullptr */
-        lexOperator = 79,       /* operator */      lexOr = 80,             /* or */        lexOr_eq = 81,              /* or_eq */
-        lexOverride = 82,       /* override */      lexPrivate = 83,        /* private */   lexProtected = 84,          /* protected */
-        lexPublic = 85,         /* public */        lexRegister = 86,       /* register */  lexReinterpret_cast = 87,   /* reinterpret_cast */
-        lexReturn = 88,         /* return */        lexShort = 89,          /* short */     lexSigned = 90,             /* signed */
-        lexSizeof = 91,         /* sizeof */        lexStatic = 92,         /* static */    lexStatic_assert = 93,      /* static_assert */
-        lexStatic_cast = 94,    /* static_cast */   lexStruct = 95,         /* struct */    lexSwitch = 96,             /* switch */
-        lexTemplate = 97,       /* template */      lexThis = 98,           /* this */      lexThread_local = 99,       /* thread_local */
-        lexThrow = 100,         /* throw */         lexTrue = 101,          /* true */      lexTry = 102,               /* try */
-        lexTypedef = 103,       /* typedef */       lexTypeid = 104,        /* typeid */    lexTypename = 105,          /* typename */
-        lexUnion = 106,         /* union */         lexUnsigned = 107,      /* unsigned */  lexUsing = 108,             /* using */
-        lexVirtual = 109,       /* virtual */       lexVoid = 110,          /* void */      lexVolatile = 111,          /* volatile */
-        lexWchar_t = 112,       /* wchar_t */       lexWhile = 113,         /* while */
+        lexNum = 5,             /* число-в10 */     lexNumOct = 17,         /* ч-в8 */      lexNumHex = 23,             /* ч-в16 */
+        lexNumU = 6,            /* ч-в10-U */       lexNumOctU = 18,        /* ч-в8-U */    lexNumHexU = 24,            /* ч-в16-U */
+        lexNumUL = 7,           /* ч-в10-UL */      lexNumOctUL = 19,       /* ч-в8-UL */   lexNumHexUL = 25,           /* ч-в16-UL */
+        lexNumULL = 8,          /* ч-в10-ULL */     lexNumOctULL = 20,      /* ч-в8-ULL */  lexNumHexULL = 26,          /* ч-в16-ULL */
+        lexNumL = 9,            /* ч-в10-L */       lexNumOctL = 21,        /* ч-в8-L */    lexNumHexL = 27,            /* ч-в16-L */
+        lexNumLL = 10,          /* ч-в10-LL */      lexNumOctLL = 22,       /* ч-в8-LL */   lexNumHexLL = 28,           /* ч-в16-LL */
+        lexNumBin = 11,         /* ч-вbin */        lexNumBinL = 15,        /* ч-вbin-L */  lexNumBinLL = 16,           /* ч-вbin-LL */
+        lexNumBinU = 12,        /* ч-вbin-U */      lexNumBinUL = 13,       /* ч-вbin-UL */ lexNumBinULL = 14,          /* ч-вbin-ULL */
 
-        lexPlus = 114,          /* + */             lexPlus_Plus = 115,     /* ++ */        lexPlus_Eq = 116,           /* += */
-        lexMinus = 117,         /* - */             lexMinus_Minus = 118,   /* -- */        lexMinus_Eq = 119,          /* -= */
-        lexStar = 120,          /* * */             lexStar_Eq = 121,       /* *= */
-        lexSlash = 122,         /* / */             lexSlash_Eq = 123,      /* /= */
-        lexModulo = 124,        /* % */             lexModulo_Eq = 125,     /* %= */
-        lexCaret = 126,         /* ^ */             lexCaret_Eq = 127,      /* ^= */
-        lexAmpersand = 128,     /* & */             lexLogical_And = 129,   /* && */        lexAmpersand_Eq = 130,      /* &= */
-        lexPipe = 131,          /* | */             lexLogical_Or = 132,    /* || */        lexPipe_Eq = 133,           /* |= */
-        lexQuestion_Mark = 134, /* ? */             lexExclaim = 135,       /* ! */         lexNot_Eq = 136,            /* != */
-        lexAssign = 137,        /* = */             lexEqual = 138,         /* == */
-        lexColon = 139,         /* : */             lexDouble_Colon = 140,  /* :: */        lexSemicolon = 141,         /* ; */
-        lexDot = 142,           /* . */             lexDot_Star = 143,      /* .* */        lexEllipsis = 144,          /* ... */
-        lexComma = 145,         /* , */
-        lexLess = 146,          /* < */             lexLess_Eq = 147,       /* <= */
-        lexShift_Left = 148,    /* << */            lexShift_Left_Eq = 149, /* <<= */
-        lexGreater = 150,       /* > */             lexGreater_Eq = 151,    /* >= */
-        lexShift_Right = 152,   /* >> */            lexShift_Right_Eq = 153,/* >>= */
-        lexArrow = 154,         /* -> */            lexArrow_Star = 155,    /* ->* */
-        lexHash = 156,          /* # */             lexHash_Hash = 157,     /* ## */
-        lexTilde = 158,         /* ~ */
-        lexOpen_Paren = 159,    /* ( */             lexClose_Paren = 160,   /* ) */
-        lexOpen_Brace = 161,    /* { */             lexClose_Brace = 162,   /* } */
-        lexOpen_Bracket = 163,  /* [ */             lexClose_Bracket = 164, /* ] */
+        lexNumReal = 29,
 
-        lexBackslash_Alert_Or_Bell = 165,       /* \a */
-        lexBackslash_Backspace = 166,           /* \b */
-        lexBackslash_Escape = 167,              /* \e */
-        lexBackslash_Form_Feed = 168,           /* \f */
-        lexBackslash_Newline = 169,             /* \n */
-        lexBackslash_Carriage_Return = 170,     /* \r */
-        lexBackslash_Tab = 171,                 /* \t */
-        lexBackslash_Vertical_Tab = 172,        /* \v */
-        lexBackslash_Backslash = 173,           /* \\ */
-        lexBackslash_Question_Mark = 174,       /* \? */
-        lexBackslash_Single_Quote =175,         /* \' */
-        lexBackslash_Double_Quote = 176,        /* \" */
-        lexBackslash_Octal_Value = 177,         /* \ooo */
-        lexBackslash_Hexadecimal_Value = 178,   /* \hhh */
-        lexBackslash_Null_Character = 179,      /* \0 */
+        lexNumFloat = 30,       /* ч-float */       lexNumDouble = 31,      /* ч-double */  lexNumDoubleL = 32,         /* ч-double-L */
 
-        lexEOT = 180;               /* \0 */
+        lexAlignas = 33,        /* alignas */       lexAlignof = 34,        /* alignof */   lexAnd = 35,                /* and */
+        lexAnd_Eq = 36,         /* and_eq */        lexAsm = 37,            /* asm */       lexAuto = 38,               /* auto */
+        lexBitand = 39,         /* bitand */        lexBitor = 40,          /* bitor */     lexBool = 41,               /* bool */
+        lexBreak = 42,          /* break */         lexCase = 43,           /* case */      lexCatch = 44,              /* catch */
+        lexChar = 45,           /* char */          lexChar16_t = 44,       /* char16_t */  lexChar32_t = 45,           /* char32_t */
+        lexClass = 48,          /* class */         lexComlp = 47,          /* comlp */     lexConst = 48,              /* const */
+        lexConst_cast = 51,     /* const_cast */    lexConstexpr = 52,      /* constexpr */ lexContinue = 53,           /* continue */
+        lexDecltype = 54,       /* decltype */      lexDefault = 55,        /* default */   lexDelete = 56,             /* delete */
+        lexDo = 57,             /* do */            lexDouble = 58,         /* double */    lexDynamic_cast = 59,       /* dynamic_cast */
+        lexElse = 60,           /* else */          lexEnum = 61,           /* enum */      lexExplicit = 62,           /* explicit */
+        lexExtern = 63,         /* extern */        lexFalse = 64,          /* false */     lexFinal = 65,              /* final */
+        lexFloat = 66,          /* float */         lexFriend = 67,         /* friend */    lexFor = 68,                /* for */
+        lexGoto = 69,           /* goto */          lexIf = 70,             /* if */        lexInline = 71,             /* inline */
+        lexInt = 72,            /* int */           lexLong = 73,           /* long */      lexMutable = 74,            /* mutable */
+        lexNamespace = 75,      /* namespace */     lexNew = 76,            /* new */       lexNoexcept = 77,           /* noexcept */
+        lexNot = 78,            /* not */           lexNot_eq = 79,         /* not_eq */    lexNullptr = 80,            /* nullptr */
+        lexOperator = 81,       /* operator */      lexOr = 82,             /* or */        lexOr_eq = 83,              /* or_eq */
+        lexOverride = 84,       /* override */      lexPrivate = 85,        /* private */   lexProtected = 86,          /* protected */
+        lexPublic = 87,         /* public */        lexRegister = 88,       /* register */  lexReinterpret_cast = 89,   /* reinterpret_cast */
+        lexReturn = 90,         /* return */        lexShort = 91,          /* short */     lexSigned = 92,             /* signed */
+        lexSizeof = 93,         /* sizeof */        lexStatic = 94,         /* static */    lexStatic_assert = 95,      /* static_assert */
+        lexStatic_cast = 96,    /* static_cast */   lexStruct = 97,         /* struct */    lexSwitch = 98,             /* switch */
+        lexTemplate = 99,       /* template */      lexThis = 100,           /* this */      lexThread_local = 101,       /* thread_local */
+        lexThrow = 102,         /* throw */         lexTrue = 103,          /* true */      lexTry = 104,               /* try */
+        lexTypedef = 105,       /* typedef */       lexTypeid = 106,        /* typeid */    lexTypename = 107,          /* typename */
+        lexUnion = 108,         /* union */         lexUnsigned = 109,      /* unsigned */  lexUsing = 110,             /* using */
+        lexVirtual = 111,       /* virtual */       lexVoid = 112,          /* void */      lexVolatile = 113,          /* volatile */
+        lexWchar_t = 114,       /* wchar_t */       lexWhile = 115,         /* while */
+
+        lexPlus = 116,          /* + */             lexPlus_Plus = 117,     /* ++ */        lexPlus_Eq = 118,           /* += */
+        lexMinus = 119,         /* - */             lexMinus_Minus = 120,   /* -- */        lexMinus_Eq = 121,          /* -= */
+        lexStar = 122,          /* * */             lexStar_Eq = 123,       /* *= */
+        lexSlash = 124,         /* / */             lexSlash_Eq = 125,      /* /= */
+        lexModulo = 126,        /* % */             lexModulo_Eq = 127,     /* %= */
+        lexCaret = 128,         /* ^ */             lexCaret_Eq = 129,      /* ^= */
+        lexAmpersand = 130,     /* & */             lexLogical_And = 131,   /* && */        lexAmpersand_Eq = 132,      /* &= */
+        lexPipe = 133,          /* | */             lexLogical_Or = 134,    /* || */        lexPipe_Eq = 135,           /* |= */
+        lexQuestion_Mark = 136, /* ? */             lexExclaim = 137,       /* ! */         lexNot_Eq = 138,            /* != */
+        lexAssign = 139,        /* = */             lexEqual = 140,         /* == */
+        lexColon = 141,         /* : */             lexDouble_Colon = 142,  /* :: */        lexSemicolon = 143,         /* ; */
+        lexDot = 144,           /* . */             lexDot_Star = 145,      /* .* */        lexEllipsis = 146,          /* ... */
+        lexComma = 147,         /* , */
+        lexLess = 148,          /* < */             lexLess_Eq = 149,       /* <= */
+        lexShift_Left = 150,    /* << */            lexShift_Left_Eq = 151, /* <<= */
+        lexGreater = 152,       /* > */             lexGreater_Eq = 153,    /* >= */
+        lexShift_Right = 154,   /* >> */            lexShift_Right_Eq = 155,/* >>= */
+        lexArrow = 156,         /* -> */            lexArrow_Star = 157,    /* ->* */
+        lexHash = 158,          /* # */             lexHash_Hash = 159,     /* ## */
+        lexTilde = 160,         /* ~ */
+        lexOpen_Paren = 161,    /* ( */             lexClose_Paren = 162,   /* ) */
+        lexOpen_Brace = 163,    /* { */             lexClose_Brace = 164,   /* } */
+        lexOpen_Bracket = 165,  /* [ */             lexClose_Bracket = 166, /* ] */
+
+        lexBackslash_Alert_Or_Bell = 167,       /* \a */
+        lexBackslash_Backspace = 168,           /* \b */
+        lexBackslash_Escape = 169,              /* \e */
+        lexBackslash_Form_Feed = 170,           /* \f */
+        lexBackslash_Newline = 171,             /* \n */
+        lexBackslash_Carriage_Return = 172,     /* \r */
+        lexBackslash_Tab = 173,                 /* \t */
+        lexBackslash_Vertical_Tab = 174,        /* \v */
+        lexBackslash_Backslash = 175,           /* \\ */
+        lexBackslash_Question_Mark = 176,       /* \? */
+        lexBackslash_Single_Quote =177,         /* \' */
+        lexBackslash_Double_Quote = 178,        /* \" */
+        lexBackslash_Octal_Value = 179,         /* \ooo */
+        lexBackslash_Hexadecimal_Value = 180,   /* \hhh */
+        lexBackslash_Null_Character = 181,      /* \0 */
+
+        lexEOT = 182;               /* \0 */
 
 
     // Текущая лексема
@@ -204,13 +209,16 @@ class Scanner {
         Buf.setLength(0);
 
         do {
-            if (i++ < NAMELEN) {
-                Buf.append((char) Text.Ch);
-            } else {
-                Error.Message("Слишком длинное имя");
-            }
+            if (Text.Ch != '_') {
+                if (i++ < NAMELEN) {
+                    Buf.append((char) Text.Ch);
+                } else {
+                    Error.Message("Слишком длинное имя");
+                }
 
-            Text.NextCh();
+                Text.NextCh();
+                BackSlash();
+            }
 
             if (Text.Ch == '_') {
                 if (i++ < NAMELEN) {
@@ -219,6 +227,7 @@ class Scanner {
                     Error.Message("Слишком длинное имя");
                 }
                 Text.NextCh();
+                BackSlash();
                 if (Text.Ch == '_') {
                     if (i++ < NAMELEN) {
                         Buf.append((char) Text.Ch);
@@ -227,8 +236,11 @@ class Scanner {
                     }
                     Error.Warning("Двойное подчеркивание в идентификаторах зарезервировано в С++");
                     Text.NextCh();
+                    BackSlash();
                 }
             }
+
+            BackSlash();
         } while (Character.isLetterOrDigit((char)Text.Ch));
 
 
@@ -244,8 +256,10 @@ class Scanner {
 
         if (Text.Ch == '0') {                                   // Проверка наличия у первого числа "0":
             Text.NextCh();
+            BackSlash();
             if (Text.Ch == 'b' || Text.Ch == 'B') {                 // (1) Если "0b", значит число "должно быть" в bin
                 Text.NextCh();
+                BackSlash();
                 if (Text.Ch == '0' || Text.Ch == '1') {             // "Должно быть"
                     BinNumber();
                     if (SearchSuffixU()) {                          // Если есть в конце U, то unsigned +
@@ -259,8 +273,14 @@ class Scanner {
                             Lex = lexNumBinU;
                         }
                     } else if (SearchSuffixL()) {                   // Если нет  в конце U, но есть L, то long +
-                        if (SearchSuffixL()) {                      // Если есть в конце L, то long long.
-                            Lex = lexNumBinLL;
+                        if (SearchSuffixU()) {                      // Если есть в конце U, то то unsigned long +
+                            Lex = lexNumBinUL;
+                        } else if (SearchSuffixL()) {               // Если есть в конце L, то long long +
+                            if (SearchSuffixU()) {                  // Если есть в конце U, то то unsigned long long.
+                                Lex = lexNumBinULL;
+                            } else {
+                                Lex = lexNumBinLL;
+                            }
                         } else {
                             Lex = lexNumBinL;
                         }
@@ -268,10 +288,11 @@ class Scanner {
                         Lex = lexNumBin;
                     }
                 } else {
-                    Error.Expected("цифра из бинарного числа");
+                    Error.Expected("символ бинарного числа");
                 }
             } else if (Text.Ch == 'x' || Text.Ch == 'X') {          // (2) Если "0х", значит число "должно быть" в 16
                 Text.NextCh();
+                BackSlash();
                 if ((Text.Ch >= '0' && Text.Ch <= '9') ||           // "Должно быть"
                         (Text.Ch >= 'A' && Text.Ch <= 'F') ||
                         (Text.Ch >= 'a' && Text.Ch <= 'f')) {
@@ -287,8 +308,14 @@ class Scanner {
                             Lex = lexNumHexU;
                         }
                     } else if (SearchSuffixL()) {                   // Если нет  в конце U, но есть L, то long +
-                        if (SearchSuffixL()) {                      // Если есть в конце L, то long long.
-                            Lex = lexNumHexLL;
+                        if (SearchSuffixU()) {                      // Если есть в конце U, то то unsigned long +
+                            Lex = lexNumHexUL;
+                        } else if (SearchSuffixL()) {               // Если есть в конце L, то long long +
+                            if (SearchSuffixU()) {                  // Если есть в конце U, то то unsigned long long.
+                                Lex = lexNumHexULL;
+                            } else {
+                                Lex = lexNumHexLL;
+                            }
                         } else {
                             Lex = lexNumHexL;
                         }
@@ -296,7 +323,7 @@ class Scanner {
                         Lex = lexNumHex;
                     }
                 } else {
-                    Error.Expected("цифра или буква из шестнадцатеричного числа");
+                    Error.Expected("символ шестнадцатеричного числа");
                 }
             } else if (Character.isDigit((char)Text.Ch)) {          // (3) Если "0 с цифрой", значит число "должно быть" в 8
                 OctNumber();                                        // Просто в 8
@@ -311,8 +338,14 @@ class Scanner {
                         Lex = lexNumOctU;
                     }
                 } else if (SearchSuffixL()) {                       // Если нет  в конце U, но есть L, то long +
-                    if (SearchSuffixL()) {                          // Если есть в конце L, то long long.
-                        Lex =lexNumOctLL;
+                    if (SearchSuffixU()) {                          // Если есть в конце U, то то unsigned long +
+                        Lex = lexNumOctUL;
+                    } else if (SearchSuffixL()) {                   // Если есть в конце L, то long long +
+                        if (SearchSuffixU()) {                      // Если есть в конце U, то то unsigned long long.
+                            Lex = lexNumOctULL;
+                        } else {
+                            Lex = lexNumOctLL;
+                        }
                     } else {
                         Lex = lexNumOctL;
                     }
@@ -386,8 +419,14 @@ class Scanner {
                     Lex = lexNumU;
                 }
             } else if (SearchSuffixL()) {                           // Если нет  в конце U, но есть L, то long +
-                if (SearchSuffixL()) {                              // Если есть в конце L, то long long.
-                    Lex =lexNumLL;
+                if (SearchSuffixU()) {                              // Если есть в конце U, то то unsigned long +
+                    Lex = lexNumUL;
+                } else if (SearchSuffixL()) {                       // Если есть в конце L, то long long +
+                    if (SearchSuffixU()) {                          // Если есть в конце U, то то unsigned long long.
+                        Lex = lexNumULL;
+                    } else {
+                        Lex = lexNumLL;
+                    }
                 } else {
                     Lex = lexNumL;
                 }
@@ -419,6 +458,7 @@ class Scanner {
     private static void BinNumber() {
         do {
             Text.NextCh();
+            BackSlash();
         } while (Text.Ch == '0' || Text.Ch == '1');
     }
 
@@ -426,6 +466,7 @@ class Scanner {
     private static void OctNumber() {
         do {
             Text.NextCh();
+            BackSlash();
         } while (Text.Ch >= '0' && Text.Ch <= '7');
     }
 
@@ -433,6 +474,7 @@ class Scanner {
     private static void HexNumber() {
         do {
             Text.NextCh();
+            BackSlash();
         } while ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f'));
     }
 
@@ -440,6 +482,7 @@ class Scanner {
     private static void DecNumber() {
         do {
             Text.NextCh();
+            BackSlash();
         } while (Character.isDigit((char)Text.Ch));
     }
 
@@ -448,15 +491,20 @@ class Scanner {
     private static boolean SearchSuffixE() {
         if (Text.Ch == 'E' || Text.Ch == 'e') {
             Text.NextCh();
+            BackSlash();
+
             if (Text.Ch == '-') {
                 Text.NextCh();
             } else if (Text.Ch == '+') {
                 Text.NextCh();
             }
+
+            BackSlash();
+
             if (Character.isDigit((char)Text.Ch)) {
                 DecNumber();
             } else {
-                Error.Expected("цифра");
+                Error.Expected("символ после суффикса");
             }
             return true;
         } else {
@@ -468,6 +516,7 @@ class Scanner {
     private static boolean SearchSuffixF() {
         if (Text.Ch == 'F' || Text.Ch == 'f') {
             Text.NextCh();
+            BackSlash();
             return true;
         } else {
             return false;
@@ -478,6 +527,7 @@ class Scanner {
     private static boolean SearchSuffixU() {
         if (Text.Ch == 'U' || Text.Ch == 'u') {
             Text.NextCh();
+            BackSlash();
             return true;
         } else {
             return false;
@@ -488,6 +538,7 @@ class Scanner {
     private static boolean SearchSuffixL() {
         if (Text.Ch == 'L' || Text.Ch == 'l') {
             Text.NextCh();
+            BackSlash();
             return true;
         } else {
             return false;
@@ -498,6 +549,7 @@ class Scanner {
     // Комментарий со звездочкой
     private static void CommentStar() {
         Text.NextCh();
+        BackSlash();
 
         do {
             while (Text.Ch != '*' && Text.Ch != Text.chEOT) {
@@ -505,6 +557,7 @@ class Scanner {
             }
             if (Text.Ch == '*') {
                 Text.NextCh();
+                BackSlash();
             }
         } while (Text.Ch != '/' && Text.Ch != Text.chEOT);
 
@@ -520,10 +573,11 @@ class Scanner {
     private static void Comment() {
         while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
             Text.NextCh();
+            BackSlash();
         }
     }
 
-    // Нахождение символа (не более 2 байта)
+    // Нахождение символа (не более 1 байта)
     private static void Character() {
         Text.NextCh();
 
@@ -553,36 +607,56 @@ class Scanner {
                 Text.NextCh();
             } else if (Text.Ch >= '0' && Text.Ch <= '3') {
                 Text.NextCh();
+                BackSlash();
                 if (Text.Ch >= '0' && Text.Ch <= '7') {
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch >= '0' && Text.Ch <= '7') {
                         Text.NextCh();
+                        BackSlash();
                     }
                 }
             } else if (Text.Ch >= '4' && Text.Ch <= '7') {
                 Text.NextCh();
+                BackSlash();
                 if (Text.Ch >= '0' && Text.Ch <= '7') {
                     Text.NextCh();
+                    BackSlash();
                 }
             } else if (Text.Ch == 'x') {
-                do {
+                Text.NextCh();
+                BackSlash();
+                if (!((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f'))) {
+                    Error.Expected("символ шестнадцатеричного числа");
+                }
+
+                while (Text.Ch == '0') {
                     Text.NextCh();
-                } while (Text.Ch == '0');
+                    BackSlash();
+                }
                 if ((Text.Ch >= '1' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
                     Text.NextCh();
+                    BackSlash();
                     if ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
                         Text.NextCh();
+                        BackSlash();
                     }
                 }
+            } else if (Text.Ch == '\n') {
+                Text.NextCh();
+                BackSlash();
+                Text.NextCh();
             }
-        } else if (Character.isLetterOrDigit((char)Text.Ch)) {
-            Text.NextCh();
+        } else if (Text.Ch == '\'') {
+            Error.Expected("символ");
         } else {
-            Error.Expected("символ в ''");
+            Text.NextCh();
         }
 
+        BackSlash();
+
         if (Text.Ch != '\'') {
-            Error.Expected("символ ' перед " + (char)Text.Ch);
+            Error.Expected("символ '");
         } else {
             Text.NextCh();
         }
@@ -593,19 +667,40 @@ class Scanner {
     private static void String() {
         do {
             Text.NextCh();
-        } while (Text.Ch != '\"' && Text.Ch != '\\' && Text.Ch != Text.chEOL && Text.Ch != Text.chEOT);
+            if (Text.Ch == '\\') {
+                Text.NextCh();
+                if (Text.Ch == '\"') {
+                    Text.NextCh();
+                } else if (Text.Ch == Text.chEOL) {
+                    Text.NextCh();
+                    BackSlash();
+                }
+            }
+        } while (Text.Ch != '\"' /*&& Text.Ch != '\\'*/ && Text.Ch != Text.chEOL && Text.Ch != Text.chEOT);
 
         if (Text.Ch == Text.chEOL || Text.Ch == Text.chEOT) {
-            Error.Message("Не закончена строка");
-        } else if (Text.Ch == '\\') {
-            Text.NextCh();
-            if (Text.Ch == Text.chEOT) {
-                Error.Message("Не закончена строка");
-            } else {
-                String();
-            }
+            Error.Expected("символ строки");
+//        } else if (Text.Ch == '\\') {
+//            Text.NextCh();
+//            if (Text.Ch == Text.chEOT) {
+//                Error.Message("Не закончена строка");
+//            } else {
+//                String();
+//            }
         } else {
             Text.NextCh();
+        }
+    }
+
+
+    private static void BackSlash() {
+        while (Text.Ch == '\\') {
+            Text.NextCh();
+            if (Text.Ch == Text.chEOL) {
+                Text.NextCh();
+            } else {
+                Error.Expected("продолжение в следующей строке");
+            }
         }
     }
 
@@ -620,6 +715,9 @@ class Scanner {
 
         if (Character.isLetter((char)Text.Ch)) {
             Ident();
+        } else if (Text.Ch == '_') {
+            Error.Warning("Не рекомендуется использовать подчеркивание в начале идентификатора в С++");
+            Ident();
         } else if (Character.isDigit((char)Text.Ch)) {
             Number();
         } else {
@@ -630,6 +728,7 @@ class Scanner {
                     break;
                 case ':':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == ':') {
                         Text.NextCh();
                         Lex = lexDouble_Colon;
@@ -639,6 +738,7 @@ class Scanner {
                     break;
                 case '.':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '*') {
                         Text.NextCh();
                         Lex = lexDot_Star;
@@ -676,6 +776,7 @@ class Scanner {
                     break;
                 case '=':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexEqual;
@@ -685,11 +786,13 @@ class Scanner {
                     break;
                 case '<':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexLess_Eq;
                     } else if (Text.Ch == '<') {
                         Text.NextCh();
+                        BackSlash();
                         if (Text.Ch == '=') {
                             Text.NextCh();
                             Lex = lexShift_Left_Eq;
@@ -702,11 +805,13 @@ class Scanner {
                     break;
                 case '>':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexGreater_Eq;
                     } else if (Text.Ch == '>') {
                         Text.NextCh();
+                        BackSlash();
                         if (Text.Ch == '=') {
                             Text.NextCh();
                             Lex = lexShift_Right_Eq;
@@ -743,6 +848,7 @@ class Scanner {
                     break;
                 case '+':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexPlus_Eq;
@@ -755,11 +861,13 @@ class Scanner {
                     break;
                 case '-':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexMinus_Eq;
                     } else if (Text.Ch == '>') {
                         Text.NextCh();
+                        BackSlash();
                         if (Text.Ch == '*') {
                             Text.NextCh();
                             Lex = lexArrow_Star;
@@ -775,6 +883,7 @@ class Scanner {
                     break;
                 case '*':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexStar_Eq;
@@ -784,6 +893,7 @@ class Scanner {
                     break;
                 case '/':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '*' ) {
                         CommentStar();
                         NextLex();
@@ -799,6 +909,7 @@ class Scanner {
                     break;
                 case '%':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexModulo_Eq;
@@ -808,6 +919,7 @@ class Scanner {
                     break;
                 case '&':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexAmpersand_Eq;
@@ -820,6 +932,7 @@ class Scanner {
                     break;
                 case '|':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexPipe_Eq;
@@ -832,6 +945,7 @@ class Scanner {
                     break;
                 case '^':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexCaret_Eq;
@@ -845,6 +959,7 @@ class Scanner {
                     break;
                 case '!':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '=') {
                         Text.NextCh();
                         Lex = lexNot_Eq;
@@ -858,6 +973,7 @@ class Scanner {
                     break;
                 case '#':
                     Text.NextCh();
+                    BackSlash();
                     if (Text.Ch == '#') {
                         Text.NextCh();
                         Lex = lexHash_Hash;
@@ -879,95 +995,99 @@ class Scanner {
                     }
                     break;
                 case '\\':
-                    Text.NextCh();
-                    if (Text.Ch == 'n') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Newline;
-                    } else if (Text.Ch == 't') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Tab;
-                    } else if (Text.Ch == 'e') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Escape;
-                    } else if (Text.Ch == 'v') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Vertical_Tab;
-                    } else if (Text.Ch == 'b') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Backspace;
-                    } else if (Text.Ch == 'r') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Carriage_Return;
-                    } else if (Text.Ch == 'f') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Form_Feed;
-                    } else if (Text.Ch == 'a') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Alert_Or_Bell;
-                    } else if (Text.Ch == '\\') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Backslash;
-                    } else if (Text.Ch == '?') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Question_Mark;
-                    } else if (Text.Ch == '\'') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Single_Quote;
-                    } else if (Text.Ch == '\"') {
-                        Text.NextCh();
-                        Lex = lexBackslash_Double_Quote;
-                    } else if (Text.Ch == '0') {
-                        Text.NextCh();
-                        if (Text.Ch >= '0' && Text.Ch <= '7') {
-                            Text.NextCh();
-                            if (Text.Ch >= '0' && Text.Ch <= '7') {
-                                Text.NextCh();
-                            }
-                            Lex = lexBackslash_Octal_Value;
-                        } else {
-                            Lex = lexBackslash_Null_Character;
-                        }
-                    } else if (Text.Ch >= '1' && Text.Ch <= '3') {
-                        Text.NextCh();
-                        if (Text.Ch >= '0' && Text.Ch <= '7') {
-                            Text.NextCh();
-                            if (Text.Ch >= '0' && Text.Ch <= '7') {
-                                Text.NextCh();
-                            }
-                        }
-                        Lex = lexBackslash_Octal_Value;
-                    } else if (Text.Ch >= '4' && Text.Ch <= '7') {
-                        Text.NextCh();
-                        if (Text.Ch >= '0' && Text.Ch <= '7') {
-                            Text.NextCh();
-                        }
-                        Lex = lexBackslash_Octal_Value;
-                    } else if (Text.Ch == 'x') {
-                        do {
-                            Text.NextCh();
-                        } while (Text.Ch == '0');
-                        if ((Text.Ch >= '1' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
-                            Text.NextCh();
-                            if ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
-                                Text.NextCh();
-                            }
-                        }
-                        Lex = lexBackslash_Hexadecimal_Value;
-                    } else {
-                        Error.Expected("буква/цифра/символ для \\");
-                    }
+                    BackSlash();
+                    NextLex();
                     break;
-                case '_':
-                    Text.NextCh();
-                    if (Character.isLetterOrDigit((char)Text.Ch)) {
-                        Error.Warning("Не следует использовать идентификаторы, начинающиеся с одного символа подчеркивания в С++");
-                        Ident();
-                        Name = "_" + Name;
-                        Lex = TestKW();
-                    } else {
-                        Error.Expected("цифра или буква");
-                    }
-                    break;
+//                case '\\':
+//                    Text.NextCh();
+//                    if (Text.Ch == 'n') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Newline;
+//                    } else if (Text.Ch == 't') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Tab;
+//                    } else if (Text.Ch == 'e') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Escape;
+//                    } else if (Text.Ch == 'v') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Vertical_Tab;
+//                    } else if (Text.Ch == 'b') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Backspace;
+//                    } else if (Text.Ch == 'r') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Carriage_Return;
+//                    } else if (Text.Ch == 'f') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Form_Feed;
+//                    } else if (Text.Ch == 'a') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Alert_Or_Bell;
+//                    } else if (Text.Ch == '\\') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Backslash;
+//                    } else if (Text.Ch == '?') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Question_Mark;
+//                    } else if (Text.Ch == '\'') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Single_Quote;
+//                    } else if (Text.Ch == '\"') {
+//                        Text.NextCh();
+//                        Lex = lexBackslash_Double_Quote;
+//                    } else if (Text.Ch == '0') {
+//                        Text.NextCh();
+//                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+//                            Text.NextCh();
+//                            if (Text.Ch >= '0' && Text.Ch <= '7') {
+//                                Text.NextCh();
+//                            }
+//                            Lex = lexBackslash_Octal_Value;
+//                        } else {
+//                            Lex = lexBackslash_Null_Character;
+//                        }
+//                    } else if (Text.Ch >= '1' && Text.Ch <= '3') {
+//                        Text.NextCh();
+//                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+//                            Text.NextCh();
+//                            if (Text.Ch >= '0' && Text.Ch <= '7') {
+//                                Text.NextCh();
+//                            }
+//                        }
+//                        Lex = lexBackslash_Octal_Value;
+//                    } else if (Text.Ch >= '4' && Text.Ch <= '7') {
+//                        Text.NextCh();
+//                        if (Text.Ch >= '0' && Text.Ch <= '7') {
+//                            Text.NextCh();
+//                        }
+//                        Lex = lexBackslash_Octal_Value;
+//                    } else if (Text.Ch == 'x') {
+//                        do {
+//                            Text.NextCh();
+//                        } while (Text.Ch == '0');
+//                        if ((Text.Ch >= '1' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+//                            Text.NextCh();
+//                            if ((Text.Ch >= '0' && Text.Ch <= '9') || (Text.Ch >= 'A' && Text.Ch <= 'F') || (Text.Ch >= 'a' && Text.Ch <= 'f')) {
+//                                Text.NextCh();
+//                            }
+//                        }
+//                        Lex = lexBackslash_Hexadecimal_Value;
+//                    } else {
+//                        Error.Expected("буква/цифра/символ для \\");
+//                    }
+//                    break;
+//                case '_':
+//                    Text.NextCh();
+//                    if (Character.isLetterOrDigit((char)Text.Ch)) {
+//                        Error.Warning("Не следует использовать идентификаторы, начинающиеся с одного символа подчеркивания в С++");
+//                        Ident();
+//                        Name = "_" + Name;
+//                        Lex = TestKW();
+//                    } else {
+//                        Error.Expected("цифра или буква");
+//                    }
+//                    break;
                 case Text.chEOT:
                     Lex = lexEOT;
                     break;

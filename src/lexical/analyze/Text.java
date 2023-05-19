@@ -18,11 +18,13 @@ class Text {
 
     static void NextCh() {
         try {
+            Location.ErrorPos = Location.Pos;
             if ((Ch = f.read()) == -1) {
                 Ch = chEOT;
             } else if (Ch == '\n') {
                 System.out.println();
                 Location.Line++;
+                Location.ErrorPos = Location.Pos;
                 Location.Pos = 0;
                 Ch = chEOL;
             } else if (Ch == '\r') {

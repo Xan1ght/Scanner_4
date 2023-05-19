@@ -1,6 +1,6 @@
 Option1
-"Cool \
-!"
+"Cool"
+"!"
 
 Option2
 "Cool" " - Yes!"
@@ -16,13 +16,9 @@ Option3
 Option4
 
 // 1
-"Cool \
-!"
-
-// 2
 "Cool" " - Yes!"
 
-// 3
+// 2
 "Cool"
         "Cool"
                 "Cool"

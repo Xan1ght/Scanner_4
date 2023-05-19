@@ -26,37 +26,41 @@ public class Counter {
     static void AllLexAdd2ChainHash() {
         Scanner.Add2ChainHash(Scanner.H,    "Имя",                                  Scanner.lexName);
 
-        Scanner.Add2ChainHash(Scanner.H,    "Число",                                Scanner.lexNum);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (полож.)",                       Scanner.lexNumU);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (полож. + диапозон)",            Scanner.lexNumUL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (полож. + 2х диапозон)",         Scanner.lexNumULL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (+ диапозон)",                   Scanner.lexNumL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (+ 2x диапозон)",                Scanner.lexNumLL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (int)",                          Scanner.lexNumInt);
+
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е)",                         Scanner.lexNum);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е + U)",                     Scanner.lexNumU);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е + U + L)",                 Scanner.lexNumUL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е + U + L + L)",             Scanner.lexNumULL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е + L)",                     Scanner.lexNumL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (10-е + L + L)",                 Scanner.lexNumLL);
 
         Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е)",                        Scanner.lexNumBin);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е полож.)",                 Scanner.lexNumBinU);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е полож. + диапозон)",      Scanner.lexNumBinUL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е полож. + 2х диапозон)",   Scanner.lexNumBinULL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + диапозон)",             Scanner.lexNumBinL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + 2x диапозон)",          Scanner.lexNumBinLL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + U)",                    Scanner.lexNumBinU);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + U + L)",                Scanner.lexNumBinUL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + U + L + L)",            Scanner.lexNumBinULL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + L)",                    Scanner.lexNumBinL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (bin-е + L + L)",                Scanner.lexNumBinLL);
 
         Scanner.Add2ChainHash(Scanner.H,    "Число (8-е)",                          Scanner.lexNumOct);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е полож.)",                   Scanner.lexNumOctU);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е полож. + диапозон)",        Scanner.lexNumOctUL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е полож. + 2х диапозон)",     Scanner.lexNumOctULL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + диапозон)",               Scanner.lexNumOctL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + 2x диапозон)",            Scanner.lexNumOctLL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + U)",                      Scanner.lexNumOctU);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + U + L)",                  Scanner.lexNumOctUL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + U + L + L)",              Scanner.lexNumOctULL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + L)",                      Scanner.lexNumOctL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (8-е + L + L)",                  Scanner.lexNumOctLL);
 
         Scanner.Add2ChainHash(Scanner.H,    "Число (16-е)",                         Scanner.lexNumHex);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е полож.)",                  Scanner.lexNumHexU);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е полож. + диапозон)",       Scanner.lexNumHexUL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е полож. + 2х диапозон)",    Scanner.lexNumHexULL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + диапозон)",              Scanner.lexNumHexL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + 2x диапозон)",           Scanner.lexNumHexLL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + U)",                     Scanner.lexNumHexU);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + U + L)",                 Scanner.lexNumHexUL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + U + L + L)",             Scanner.lexNumHexULL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + L)",                     Scanner.lexNumHexL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (16-е + L + L)",                 Scanner.lexNumHexLL);
 
-        Scanner.Add2ChainHash(Scanner.H,    "Число (двойная)",                      Scanner.lexNumDouble);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (двойная + диапозон)",           Scanner.lexNumDoubleL);
-        Scanner.Add2ChainHash(Scanner.H,    "Число (одинарная)",                    Scanner.lexNumFloat);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (real)",                         Scanner.lexNumReal);
+
+        Scanner.Add2ChainHash(Scanner.H,    "Число (Double)",                       Scanner.lexNumDouble);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (Long Double)",                  Scanner.lexNumDoubleL);
+        Scanner.Add2ChainHash(Scanner.H,    "Число (Float)",                        Scanner.lexNumFloat);
 
 
         Scanner.Add2ChainHash(Scanner.H,    "+",                Scanner.lexPlus);
@@ -189,11 +193,50 @@ public class Counter {
             }
         }
 
+        nameLex[j] = "Число (int)";
+        dataLex[j] = Scanner.lexNumInt;
+        int k = Scanner.lexNum;
+        while (k <= Scanner.lexNumHexLL) {
+            scoreLex[dataLex[j]] += scoreLex[k];
+            k++;
+        }
+        if (scoreLex[dataLex[j]] != 0) {
+            j++;
+        }
+
+        nameLex[j] = "Число (real)";
+        dataLex[j] = Scanner.lexNumReal;
+        while (k <= Scanner.lexNumDoubleL) {
+            scoreLex[dataLex[j]] += scoreLex[k];
+            k++;
+        }
+        if (scoreLex[dataLex[j]] != 0) {
+            j++;
+        }
+
         insertionSort(nameLex, dataLex, j);
 
         System.out.println("Количество лексем по отдельности: ");
         for (int i = 0; i < j; i++) {
-            System.out.println(nameLex[i] + (" ").repeat(40-nameLex[i].length()) + "<< " + scoreLex[dataLex[i]]);
+            if (dataLex[i] >= Scanner.lexNum && dataLex[i] <= Scanner.lexNumHexLL) {
+                System.out.println("\033[37m" + (" ").repeat(6) + nameLex[i] + (" ").repeat(44 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]] + "\033[0m");
+            } else if (dataLex[i] >= Scanner.lexNumFloat && dataLex[i] <= Scanner.lexNumDoubleL) {
+                System.out.println("\033[37m" + (" ").repeat(6) + nameLex[i] + (" ").repeat(44 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]] + "\033[0m");
+            } else if (dataLex[i] == Scanner.lexNumInt || dataLex[i] == Scanner.lexNumReal) {
+                System.out.println("\033[33m" + nameLex[i] + (" ").repeat(50 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]] + "\033[0m");
+            } else if (dataLex[i] == Scanner.lexCharacter || dataLex[i] == Scanner.lexString){
+                System.out.println("\033[32m" + nameLex[i] + (" ").repeat(50 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]] + "\033[0m");
+            } else if (dataLex[i] == Scanner.lexName) {
+                System.out.println("\033[35m" + nameLex[i] + (" ").repeat(50 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]] + "\033[0m");
+            } else {
+                System.out.println(nameLex[i] + (" ").repeat(50 - nameLex[i].length()) +
+                        "<< " + scoreLex[dataLex[i]]);
+            }
         }
     }
 }

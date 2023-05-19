@@ -32,19 +32,15 @@ public class CPlusPlus {
             Location.Path = args[0];
         }
 
-        if (Location.Path == null || (Location.Path.length() < 3 &&
-                Location.Path.indexOf('.') == Location.Path.lastIndexOf('.') &&
-                Location.Path.substring('.' + 1).isEmpty() &&
-                Location.Path.charAt(0) != '.')) {
+        if (Location.Path == null || (Location.Path.length() < 3 )) {
             System.out.println("\nФормат вызова:\n   <Входной файл>.<Формат файла>");
             System.exit(1);
-        } else if (Location.Path.length() >= 3 && Location.Path.charAt(0) == '*') {
+        } else if (Location.Path.charAt(0) == '*') {
             String currentDirectory = System.getProperty("user.dir");
             Path dir = Paths.get(currentDirectory);
 
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir, "*" +
-                    Location.Path.substring(Location.Path.lastIndexOf('.') +
-                    Location.Path.lastIndexOf(Location.Path)))) {
+                    Location.Path.substring(Location.Path.lastIndexOf('.')))) {
                 for (Path file : stream) {
                     Location.Path = file.toString();
 
@@ -64,7 +60,7 @@ public class CPlusPlus {
                 System.err.println(e);
                 System.exit(1);
             }
-        } else if (Location.Path.length() >= 3) {
+        } else {
             System.out.println("\n\n\n" + "Название файла: " + Location.Path);
             System.out.println("\033[33m" +("=").repeat(100) + "\033[0m");
 
@@ -75,7 +71,6 @@ public class CPlusPlus {
             System.out.println("\n\033[33m" +("=").repeat(100) + "\033[0m");
 
             Pars.CompileA();    // Компиляция задачи А
-
         }
     }
 }

@@ -6,13 +6,14 @@ import java.io.*;
 class Error {
     static void Message(String Msg) {
         int ELine = Location.Line;
+        int Pos = Location.ErrorPos;
         while (Text.Ch != Text.chEOL && Text.Ch != Text.chEOT) {
             Text.NextCh();
         }
         if (Text.Ch == Text.chEOT) {
             System.out.println();
         }
-        for (int i = 1; i < Location.LexPos; i++) {
+        for (int i = 0; i < Pos; i++) {
             System.out.print(' ');
         }
         System.out.println("^");
